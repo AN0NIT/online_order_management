@@ -1,5 +1,4 @@
 import React, {useEffect} from "react";
-import ReactDOM from "react-dom";
 import Script from "react-load-script";
 
 export default function Trends({ type, keyword, time, geo, handleScriptLoad}) {

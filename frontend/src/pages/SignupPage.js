@@ -74,9 +74,9 @@ export default function Signup() {
                             <option class="form-check form-check-inline" value='SELLER'>
                                 <label class="text-sm form-check-label inline-block text-gray-600" for="inlineCheckbox2">Seller</label>
                             </option>
-                            <option class="form-check form-check-inline" value='BOTH'>
+                            {/* <option class="form-check form-check-inline" value='BOTH'>
                                 <label class="text-sm form-check-label inline-block text-gray-600" for="inlineCheckbox2">Both</label>
-                            </option>
+                            </option> */}
                         </select>
                     </div>
                     {role!=='BUYER'&&<div class="flex items-center border-2 py-2 px-3 rounded-2xl mb-4 ">

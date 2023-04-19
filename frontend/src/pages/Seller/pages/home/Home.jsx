@@ -16,15 +16,17 @@ const About = () => {
   const type = "GEO_MAP";
   //const keyword = "electronics";
   const [keyword, setKeyword] = useState('electronics')
-  const time = "now 1-d";
-  const geo = "IN";
+  // const time = "now 1-d";
+  const [time, setTime] = useState('now 1-d')
+  // const geo = "IN";
+  const [geo, setGeo] = useState('IN')
   const handleScriptLoad = () => {
     const property = "froogle";
     window.trends.embed.renderExploreWidgetTo(
       document.getElementById("widget"),
       type,
       {
-        comparisonItem: [{ keyword:keyword, geo: geo, time: time}],
+        comparisonItem: [{ keyword: keyword, geo: geo, time: time }],
         category: 0,
         property: property
       },
@@ -36,11 +38,13 @@ const About = () => {
     );
   };
   useEffect(() => {
-    alert("trends "+keyword)
+    // alert("trends "+keyword)
+    // alert("geo "+geo)
+    // alert("time "+time)
     document.getElementById("widget").innerHTML = "";
     handleScriptLoad();
-  }, [keyword])
-  
+  }, [keyword, geo, time])
+
 
   return (
     <div className='md:flex md:justify-center md:align-center md:mx-4'>
@@ -50,33 +54,41 @@ const About = () => {
           <FeaturedInfo />
           {/* <Chart data={userData} title="User Analytics" grid dataKey="Active User" /> */}
           <SeasonalChart grid />
-          {/* <Trends 
-          type={type}
-          keyword={keyword}
-          time={time}
-          /> */}
           {/* <div className="homeWidgets">
           <WidgetSm/>
           <WidgetLg/>
-        </div> */}
-        <select value={keyword} onChange={(e) => { setKeyword(e.target.value) }}>
-          <option value=''>Select A Category</option>
-          <option value="Electronics">Electronics</option>
-          <option value="Furniture">Furniture</option>
-          <option value="Clothing">Clothing</option>
-        </select>
-        <div id="widget">
-          <Trends
-            type={type}
-            keyword={keyword}
-            time={time}
-            geo={geo}
-            handleScriptLoad={handleScriptLoad}
-          />
+          </div> */}
+            <select value={keyword} onChange={(e) => { setKeyword(e.target.value) }}>
+              <option value=''>Select a category</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Furniture">Furniture</option>
+              <option value="Clothing">Clothing</option>
+            </select>
+            <select value={geo} onChange={(e) => { setGeo(e.target.value) }}>
+              <option value=''>Select a category</option>
+              <option value="">World Wide</option>
+              <option value="IN">India</option>
+              <option value="US">United States</option>
+            </select>
+            <select value={time} onChange={(e) => { setTime(e.target.value) }}>
+              <option value=''>Select a time</option>
+              <option value="now 1-d">Past 1 day</option>
+              <option value="now 7-d">Past 7 days</option>
+              <option value="today 1-m">Past 1 month</option>
+              <option value="today 12-m">Past 1 year</option>
+              <option value="today 5-y">Past 5 years</option>
+            </select>
+          <div id="widget">
+            <Trends
+              type={type}
+              keyword={keyword}
+              time={time}
+              geo={geo}
+              handleScriptLoad={handleScriptLoad}
+            />
+          </div>
         </div>
       </div>
-    </div>
-      
     </div >
   );
 }
