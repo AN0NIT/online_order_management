@@ -11,3 +11,9 @@
     display: flex;
     margin-top: 10px;
 }
+
+.flex{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}

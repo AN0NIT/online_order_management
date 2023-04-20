@@ -58,6 +58,7 @@ const About = () => {
           <WidgetSm/>
           <WidgetLg/>
           </div> */}
+          <div className="flex">
             <select value={keyword} onChange={(e) => { setKeyword(e.target.value) }}>
               <option value=''>Select a category</option>
               <option value="Electronics">Electronics</option>
@@ -78,6 +79,7 @@ const About = () => {
               <option value="today 12-m">Past 1 year</option>
               <option value="today 5-y">Past 5 years</option>
             </select>
+          </div>
           <div id="widget">
             <Trends
               type={type}
