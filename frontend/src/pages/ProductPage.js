@@ -10,7 +10,7 @@ export default function ProductPage() {
     const [isBasePage, setBasePage] = useState(true)
     const [Products, setProducts] = useState([])
     const [Data, setData] = useState([])
-    const [category, setcategory] = useState('')
+    const [category, setcategory] = useState('Electronics')
 
     const loadData = async () => {
         let tmp = []
@@ -69,7 +69,7 @@ export default function ProductPage() {
 
                 <div style={{ width: "85%", marginLeft: "auto", marginRight: "auto", display: "flex", justifyContent: "flex-end" }}>
                     <div class='w-8'>
-                        <button onClick={() => { if (isBasePage) { setBasePage(false); setcategory('') } else setBasePage(true) }} class='bg-suyati-blue text-white  rounded-md' >
+                        <button onClick={() => { if (isBasePage) { setBasePage(false); setcategory('') } else setBasePage(true) }} class='bg-suyati-blue text-white  rounded-md' style={{ padding: "15%" }} >
                             New Arrivals
                         </button>
                     </div>
@@ -336,15 +336,15 @@ export default function ProductPage() {
 
 
                 {!isBasePage && <div>
-                    <div style={{marginLeft:"5%",marginBottom:"2%"}}>
+                    <div style={{ marginLeft: "5%", marginBottom: "2%" }}>
                         <select value={category} onChange={(e) => { setcategory(e.target.value) }}>
-                            <option value=''>Select A Category</option>
+                            <option value=''>Select a category</option>
                             <option value="Electronics">Electronics</option>
                             <option value="Furniture">Furniture</option>
                             <option value="Clothing">Clothing</option>
                         </select>
                     </div>
-                    <div style={{display:"flex",flexDirection:"column",alignItems:"center"}}>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
 
                         {Data.map((item) => {
                             if (category === item.category)

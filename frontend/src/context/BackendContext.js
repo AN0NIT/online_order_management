@@ -121,9 +121,13 @@ export const BackendProvider = ({ children }) => {
                     setBuyer(true)
                 } else if (userArray.role == 2) {
                     setSeller(true)
-                } else if (userArray.role == 3) {
-                    setBuyer(true)
-                    setSeller(true)
+                }
+                // } else if (userArray.role == 3) {
+                //     setBuyer(true)
+                //     setSeller(true)
+                // }
+                else {
+                    alert("Error!")
                 }
                 setAuth(true)
             } else {
@@ -147,10 +151,12 @@ export const BackendProvider = ({ children }) => {
                 const userid = grab_user_id(res);
                 const message = res.data.message;
                 const userdata = grab_user_data(res);
+                // alert("userdata.rol:"+userdata.role)
                 switch (message) {
                     case "CORRECT_EMAIL_AND_PASSWORD":
                         switch (userdata.role) {
                             case 1:
+                                // alert("callinng case1 ")
                                 setBuyer(true);
                                 break;
                             case 2:
@@ -162,14 +168,11 @@ export const BackendProvider = ({ children }) => {
                         localStorage.setItem(COOKIE_USER_ID, JSON.stringify(userid))
                         localStorage.setItem(COOKIE_USER_INFO, JSON.stringify(userdata))
                         // alert('isBuyer:'+isBuyer )
-                        if (isBuyer && isSeller) {
-                            navigate('/')
-                        } else if (isBuyer) {
-                            navigate('/product')
-                        } else {
+                        if (isSeller) {
                             navigate('/seller/about')
+                        } else {
+                            navigate('/product')
                         }
-                        alert()
                         break;
                     case "WRONG_EMAIL_AND_PASSWORD":
                         console.log("Invalid username and password")
@@ -227,6 +230,7 @@ export const BackendProvider = ({ children }) => {
                     }
                 })
                 .then(data => {
+                    console.log('data::' + data.message)
                     if (data.error) {
                         alert('Error: Invalid GSTIN');
                         throw new Error('Invalid GSTIN');
@@ -236,7 +240,7 @@ export const BackendProvider = ({ children }) => {
                 .catch(error => {
                     console.error('Error:', error);
                 });
-
+            console.log('response::' + response)
             if (!response) {
                 return;
             }
@@ -257,35 +261,31 @@ export const BackendProvider = ({ children }) => {
                         alert('something went wrong')
                     else {
                         alert(res.data.message);
-                    
-
-
-                    const userid = grab_user_id(res);
-                    const message = res.data.message;
-                    const userdata = grab_user_data(res);
-                    switch (message) {
-                        case "SIGNUP_SUCCESSFULL":
-                            switch (userdata.role) {
-                                case 1:
-                                    setBuyer(true)
-                                    break;
-                                case 2:
-                                    setSeller(true)
-                                    break;
-                                case 3:
-                                    setBuyer(true)
-                                    setSeller(true)
-                                    break;
-                            }
-                            setAuth(true);
-                            setUser({ id: userid, ...userdata })
-                            localStorage.setItem(COOKIE_USER_ID, JSON.stringify(userid))
-                            localStorage.setItem(COOKIE_USER_INFO, JSON.stringify(userdata))
-                            navigate('/seller/about')
-                            break;
+                        const userid = grab_user_id(res);
+                        const message = res.data.message;
+                        const userdata = grab_user_data(res);
+                        switch (message) {
+                            case "SIGNUP_SUCCESSFULL":
+                                switch (userdata.role) {
+                                    case 2:
+                                        setSeller(true)
+                                        break;
+                                    default:
+                                        alert("Invalid Option")
+                                    // case 3:
+                                    //     setBuyer(true)
+                                    //     setSeller(true)
+                                    //     break;
+                                }
+                                setAuth(true);
+                                setUser({ id: userid, ...userdata })
+                                localStorage.setItem(COOKIE_USER_ID, JSON.stringify(userid))
+                                localStorage.setItem(COOKIE_USER_INFO, JSON.stringify(userdata))
+                                navigate('/seller/about')
+                                break;
+                        }
                     }
-        }})
-                
+                })
         }
         else {
             // alert("signing up as BUYER")
@@ -315,13 +315,12 @@ export const BackendProvider = ({ children }) => {
                                     case 1:
                                         setBuyer(true)
                                         break;
-                                    case 2:
-                                        setSeller(true)
-                                        break;
-                                    case 3:
-                                        setBuyer(true)
-                                        setSeller(true)
-                                        break;
+                                    default:
+                                        alert("Invalid Option")
+                                    // case 3:
+                                    //     setBuyer(true)
+                                    //     setSeller(true)
+                                    //     break;
                                 }
                                 setAuth(true);
                                 setUser({ id: userid, ...userdata })
@@ -330,7 +329,7 @@ export const BackendProvider = ({ children }) => {
                                 navigate('/product')
                                 break;
                         }
-                        
+
                     }
                 })
         }
@@ -350,7 +349,6 @@ export const BackendProvider = ({ children }) => {
     }
 
     const get_available_categories = async () => {
-
         axios.post(`${API_SERVER_URL}/product/category/all/`)
             .then((res) => {
                 if (res.status == 200) {
@@ -361,7 +359,6 @@ export const BackendProvider = ({ children }) => {
     }
 
     const add_product = async (name, price, category, quantity, status, image) => {
-
         if (!user) {
             alert("User id is null")
             return

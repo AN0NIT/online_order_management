@@ -36,8 +36,16 @@ function CarouselOfPosters({ data }) {
     )
 };
 
-const TShirt = () => {
+// Edit this to get various clothes to be displayed in the home page
+// const getImageUrl = () => {
+//     const staticUrl = 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-0';
+//     const imageName = 1;
+//     const imageExtension = '.jpg';
+//     return `${staticUrl}${imageName}${imageExtension}`;
+//   };
 
+
+const TShirt = (num) => {
     return (
 
         <Link to='/product' >
