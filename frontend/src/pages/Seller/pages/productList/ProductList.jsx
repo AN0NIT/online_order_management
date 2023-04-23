@@ -8,16 +8,18 @@ import Sidebar from "pages/Seller/components/sidebar/Sidebar";
 import axios from 'axios'
 import BackendContext from "context/BackendContext";
 
-export default function SellerProductList() {
 
+
+export default function SellerProductList() {
   const { API_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
   const [products, setProducts] = useState([])
-  const [data, setData] = useState([]);
-
   const user = localStorage.getItem(COOKIE_USER_INFO)
   const userdata = JSON.parse(user)
-  console.log(user)
-  console.log(userdata)
+  const [data, setData] = useState([]);
+
+  // console.log(user)
+  // console.log(userdata)
+
 
   const loadData = async () => {
     let tmp = []
@@ -31,6 +33,7 @@ export default function SellerProductList() {
             const product = stuff[i]
             tmp.push({
               id: i,
+              pid: product.id,
               name: product.name,
               img: product.image,
               stock: product.quantity,
@@ -50,23 +53,24 @@ export default function SellerProductList() {
 
   const handleDelete = async (name) => {
 
-    axios.post(`${API_SERVER_URL}/product/delete/`, 
-      { username : userdata.username, productname: name })
-    .then ((res) => {
-      if (res.status = 200) 
-        loadData()
-      else 
-        alert("handle delete error")
+    axios.post(`${API_SERVER_URL}/product/delete/`,
+      { username: userdata.username, productname: name })
+      .then((res) => {
+        if (res.status = 200)
+          loadData()
+        else
+          alert("handle delete error")
 
-    })
+      })
   };
 
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
+    { field: "pid", headerName: "Product ID", width: 300 },
     {
       field: "product",
       headerName: "Product",
-      width: 200,
+      width: 150,
       renderCell: (params) => {
         return (
           <div className="productListItem">
@@ -76,7 +80,7 @@ export default function SellerProductList() {
         );
       },
     },
-    { field: "stock", headerName: "Stock", width: 200 },
+    { field: "stock", headerName: "Stock", width: 120 },
     {
       field: "status",
       headerName: "Status",
@@ -85,16 +89,20 @@ export default function SellerProductList() {
     {
       field: "price",
       headerName: "Price",
-      width: 160,
+      width: 120,
     },
     {
       field: "action",
       headerName: "Action",
-      width: 150,
+      width: 120,
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/seller/product/" + params.row.id}>
+            <Link to={`/seller/product/${params.row.id}`} >
+              {/* <Link to={{
+              pathname: '/seller/product/0',
+              state: { pid: params.row.pid,pname: params.row.name, pquantity: params.row.quantity, pstatus: params.row.status,pprice: params.row.price}
+            }}>  */}
               <button className="productListEdit">Edit</button>
             </Link>
             <DeleteOutline

@@ -22,6 +22,15 @@ class ProductAdmin(admin.ModelAdmin):
 admin.site.register(Product, ProductAdmin)
 
 
+class CartAdmin(admin.ModelAdmin):
+    readonly_fields = ('id',)
+    #fields = ('id','buyer_id','seller_id','category','quantity','product_id','price')
+    fields = ('id','buyer_id','category','quantity','product_id','price')
+
+admin.site.register(AddToCart, CartAdmin)
+
+
+
 class CategoryStockHistoryAdmin(admin.ModelAdmin):
     ordering = ['date']
 

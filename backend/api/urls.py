@@ -24,6 +24,15 @@ urlpatterns = [
          name='get_available_categories'),
     path('api/product/allproducts/', views.get_all_products, name='all_product'),
 
+    # Cart apis
+    path('api/addtocart/add/', views.add_to_cat, name='add_to_cart'),
+    path('api/addtocart/edit/:pid', views.edit_cart_item, name='edit_cart'),
+    path('api/addtocart/delete/', views.delete_cart_item, name='delete_from_cart'),
+    path('api/addtocart/all/', views.get_cart_from_a_buyer,
+         name='get_cart_from_a_buyer'),
+    
+    
+    
     # ml
     path('api/product/category/stock/recommendation', views.get_stock_recommendation,
          name='get_stock_recommendation'),

@@ -7,8 +7,8 @@ from pandas import DataFrame
 
 
 def upload_to(instance, filename):
-    return 'images/{filename}'.format(filename=filename)
-
+    #return 'images/{filename}'.format(filename=filename)
+    return '/'.join(['content', instance.userid.username, str(instance.id),filename])
 
 class Image(models.Model):
     title = models.CharField(max_length=200)
@@ -65,7 +65,8 @@ class Product(models.Model):
     status = models.IntegerField(
         choices=PRODUCT_STATUS, null=False, default=PRODUCT_STATUS[1])
     quantity = models.PositiveBigIntegerField(default=1)
-    image = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True)
+    #image = models.ImageField(upload_to='users/%Y/%m/%d/', blank=True)
+    image = models.ImageField(upload_to=upload_to, blank=True)
     # image = models.ImageField(upload_to=upload_to, blank=True, null=True)
     added_date = models.DateField(default=date.today)
     edited_date = models.DateField(default=date.today)
@@ -79,6 +80,25 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+class AddToCart(models.Model):
+    PRODUCT_CATEGORY = (
+        (1, 'ELECTRONIC'),
+        (2, 'FURNITURE'),
+        (3, 'CLOTHING')
+    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    #buyer_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    buyer_id =  models.CharField(max_length=150)
+    #seller_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE) 
+
+    def get_seller(self):
+        return self.product_id.usedid.username
+
+    def get_buyer(self):
+        return self.buyer_id.username
+
+    
 
 class CategoryStockHistory(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

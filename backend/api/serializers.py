@@ -18,3 +18,10 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ('id', 'category', 'name', 'price', 'quantity', 'status', 'image',
                   'added_date', 'edited_date')
+
+
+class CartSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AddToCart
+        fields = ('id','buyer_id','category','quantity','product_id','price','image')
+        #fields = ('order_id','buyer_id','seller_id','category','quantity','product_id','price','image')

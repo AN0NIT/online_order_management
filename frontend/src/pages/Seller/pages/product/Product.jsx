@@ -8,10 +8,18 @@ import { useContext, useEffect } from "react";
 import BackendContext from "context/BackendContext";
 import axios from "axios";
 import { useState } from "react";
+import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 export default function Product() {
-
-
+    // const { productId } = useParams();
+    // const { API_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
+    // alert("id is:"+productId)
+    // alert("product name:"+data[productId].name)
+    // const location = useLocation();
+    // pid ,pname, pquantity, pstatus, pprice
+    // const { pid, pname, pquantity, pstatus, pprice } = location.state;
+    // alert("productId "+pid)
     return (
         <div className="product md:m-auto md:w-2/3">
             <div className="productTitleContainer">

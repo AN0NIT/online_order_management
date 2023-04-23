@@ -31,13 +31,25 @@ const todaysDate = () => {
 }
 
 export default function NewProduct() {
-  
+
   const { API_SERVER_URL, add_product, categories } = useContext(BackendContext)
   const [imageContent, setImageContent] = useState(null)
   const [sdStock, setSdStock] = useState(null)
   const [dpPrice, setDpPrice] = useState('')
   const [userSelectedStock, setUserSelectedStock] = useState('')
   const tdate = todaysDate()
+
+  //
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setImageContent(reader.result);
+    };
+  };
+
+  //
 
   const ml_SeasonalDemand = async (category) => {
     await axios.post(`${API_SERVER_URL}/product/category/stock/recommendation`, { category: category },
@@ -87,15 +99,17 @@ export default function NewProduct() {
     e.preventDefault();
     const name = e.target.name.value;
     const price = e.target.price.value;
-    alert("price is "+price)
+    alert("price is " + price)
     // const price = dpPrice;
     const category = e.target.category.value;
     const quantity = e.target.quantity.value;
-    alert("quantity is "+quantity)
-    console.log("===="+imageContent.toString())
+    alert("quantity is " + quantity)
+    // console.log("====" + imageContent.toString())
     alert("image:"+imageContent);
     const status = e.target.status.value;
-    add_product(name, price, category, quantity, status, imageContent.selectedFile);
+    const image = e.target.files[0];
+    //add_product(name, price, category, quantity, status, imageContent.selectedFile);
+    add_product(name, price, category, quantity, status, imageContent);
   }
 
   useEffect(() => {
@@ -105,7 +119,7 @@ export default function NewProduct() {
   useEffect(() => {
     ml_DynamicPrice(sdStock)
   }, [sdStock])
-  
+
   return (
     <div class=' p-8 rounded-md bg-gray-100'>
       <div className="newProduct border-2 p-8 m-auto w-1/2 bg-white">
@@ -114,12 +128,12 @@ export default function NewProduct() {
         <form onSubmit={createProduct} className="addProductForm" >
           <div className="addProductItem">
             <label>Image</label>
-            <input name='image' type="file" onChange={(e) => {
+            {/* <input name='image' type="file" onChange={(e) => {
                 setImageContent({ selectedFile: e.target.files[0] })
-                console.log("Image name:", e.target.files[0].name)
-                alert("Image name:", e.target.files[0].name)
-            }} />
-            {/* <input id="imageInput" type="file" accept="image/*" onChange={handleFileInputChange}/> */}
+                console.log("Image name:", imageContent)
+                alert("Image name:", imageContent)
+            }} /> */}
+            <input name="image" type="file" onChange={handleImageChange} />
           </div>
           <div className="addProductItem">
             <label>Name</label>
@@ -138,18 +152,18 @@ export default function NewProduct() {
           <div class='flex'>
             <div className="addProductItem">
               <label>Stock</label>
-              <input name='quantity' id='quantity' type="text" placeholder={`Stock: ${userSelectedStock}`} defaultValue={`${userSelectedStock}`}/>
+              <input name='quantity' id='quantity' type="text" placeholder={`Stock: ${userSelectedStock}`} defaultValue={`${userSelectedStock}`} />
               {/* <input name='quantity' id='quantity' type="text" placeholder={`Stock: ${sdStock?.min}-${sdStock?.max}`} /> */}
               {/* <h1 class='m-2 text-lg font-semibold text-gray-600 p-2 text-center'>{userSelectedStock}</h1> */}
             </div>
             <div className="addProductItem bg-yellow-300 p-2 rounded-md">
               <label class='text-center'>Recommended (seasonal demand)</label>
               {/* <div class='flex space-x-4'> */}
-                {/* <input name='test' class='font-semibold' onChange={sliderOnChange} type="range" min={sdStock?.min} max={sdStock?.max} value={userSelectedStock} /> */}
+              {/* <input name='test' class='font-semibold' onChange={sliderOnChange} type="range" min={sdStock?.min} max={sdStock?.max} value={userSelectedStock} /> */}
               {/* </div> */}
               <div class='text-center'>
-                  <label >{sdStock?.min} - {sdStock?.max}</label>
-                </div>
+                <label >{sdStock?.min} - {sdStock?.max}</label>
+              </div>
             </div>
 
           </div>
@@ -157,7 +171,7 @@ export default function NewProduct() {
             <div className="addProductItem">
               <label>Price</label>
               {/* <h1 class='m-2 text-lg font-semibold text-gray-600 p-2 text-center'>{dpPrice}</h1> */}
-              <input name='price' id='price' type="text" placeholder={`Price: ${dpPrice}`} defaultValue={`${dpPrice}`}/>
+              <input name='price' id='price' type="text" placeholder={`Price: ${dpPrice}`} defaultValue={`${dpPrice}`} />
             </div>
             <div className="addProductItem bg-yellow-300 p-2 rounded-md h-1/2 my-auto">
               <label class='text-center'>Recommended (dynamic price)</label>
