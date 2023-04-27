@@ -176,6 +176,7 @@ def get_product(request, pid):
 @api_view(['POST'])
 def add_product(request):
     data = request.data
+    print("Data:",data)
     pname = data['name']
     price = int(data['price'])
     category = data['category']
@@ -183,7 +184,7 @@ def add_product(request):
     status = data['status']
     image = data['image']
     username = data['username']
-
+    print("image:",image)
     if price <= 0:
         return Response('PRODUCT_PRICE_IS_ZERO_OR_LESS')
     if pname == "":

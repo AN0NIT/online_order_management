@@ -119,8 +119,10 @@ export const BackendProvider = ({ children }) => {
                 setUser({ id: JSON.parse(id), ...userArray })
                 if (userArray.role == 1) {
                     setBuyer(true)
+                    setSeller(false)
                 } else if (userArray.role == 2) {
                     setSeller(true)
+                    setBuyer(false)
                 }
                 // } else if (userArray.role == 3) {
                 //     setBuyer(true)
@@ -158,17 +160,22 @@ export const BackendProvider = ({ children }) => {
                             case 1:
                                 // alert("callinng case1 ")
                                 setBuyer(true);
+                                setSeller(false);
                                 break;
                             case 2:
-                                setSeller(true)
+                                // console.log("callinng case2 ",userdata.role)
+                                setSeller(true);
+                                setBuyer(false);
                                 break;
+                            default:
+                                alert("None of the above")
                         }
                         setAuth(true);
                         setUser({ id: userid, ...userdata })
                         localStorage.setItem(COOKIE_USER_ID, JSON.stringify(userid))
                         localStorage.setItem(COOKIE_USER_INFO, JSON.stringify(userdata))
-                        // alert('isBuyer:'+isBuyer )
-                        if (isSeller) {
+                        // alert('isBuyer:'+isSeller )
+                        if (userdata.role == 2) {
                             navigate('/seller/about')
                         } else {
                             navigate('/product')
@@ -358,16 +365,21 @@ export const BackendProvider = ({ children }) => {
             })
     }
 
-    const add_product = async (name, price, category, quantity, status, image) => {
+    //const add_product = async (name, price, category, quantity, status, imagee) => {
+    const add_product = async (formData) => {
         if (!user) {
             alert("User id is null")
             return
         }
+        formData.append('username',user.username)
+        // console.log(formData.get('username'))
         await axios.post(`${API_SERVER_URL}/product/add/`,
-            {
-                name: name, price: price, category: category, quantity: quantity, status: status,
-                image: image, username: user.username
-            })
+            // {
+            //     name: name, price: price, category: category, quantity: quantity, status: status,
+            //     image: imagee, username: user.username
+            // }
+                formData
+            )
             .then((res) => {
                 if (res.status == 200) {
                     console.log(res.data)

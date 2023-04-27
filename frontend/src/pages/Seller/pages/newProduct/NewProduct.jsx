@@ -41,15 +41,16 @@ export default function NewProduct() {
 
   //
   const handleImageChange = (e) => {
+    e.preventDefault();
+    console.log("inside handleimage change")
     const file = e.target.files[0];
+    console.log(file);
     // const reader = new FileReader();
-    const formData = new FormData();   
-    formData.append('file', file)
     // reader.readAsDataURL(file);
     // reader.onloadend = () => {
     //   setImageContent(reader.result);
     // };
-    setImageContent(formData)
+    setImageContent(file)
   };
 
   //
@@ -96,23 +97,28 @@ export default function NewProduct() {
     setUserSelectedStock(e.target.value)
   }
 
-  const createProduct = (e) => {
+  const createProduct = async (e) => {
 
     // let form_data = new FormData()
     e.preventDefault();
+
+    const formData = new FormData();   
     const name = e.target.name.value;
-    // const price = e.target.price.value;    
-    // alert("price is " + price)
+    formData.append('name', name)
     const price = dpPrice;
+    formData.append('price', price)
     const category = e.target.category.value;
+    formData.append('category', category)
     const quantity = e.target.quantity.value;
-    // alert("quantity is " + quantity)
-    // // console.log("====" + imageContent.toString())
-    // alert("image:"+imageContent);
+    formData.append('quantity', quantity)
     const status = e.target.status.value;
+    formData.append('status', status)
+    formData.append('image', imageContent)
+    console.log(formData.get('image'))
     // const image = e.target.files[0];
     //add_product(name, price, category, quantity, status, imageContent.selectedFile);
-    add_product(name, price, category, quantity, status, imageContent);
+    // await add_product(name, price, category, quantity, status, imageContent);
+    await add_product(formData);
   }
 
   useEffect(() => {
@@ -136,7 +142,7 @@ export default function NewProduct() {
                 console.log("Image name:", imageContent)
                 alert("Image name:", imageContent)
             }} /> */}
-            <input name="image" type="file" onChange={handleImageChange} />
+            <input type="file" name="image" onChange={handleImageChange} />
           </div>
           <div className="addProductItem">
             <label>Name</label>
