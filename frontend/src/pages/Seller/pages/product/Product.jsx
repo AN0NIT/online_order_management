@@ -11,10 +11,13 @@ import { useState } from "react";
 import { useParams } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 
-export default function Product() {
+export default function Product(props) {
+    const location = useLocation();
+    const params = location.state;
+    console.log("state:"+params.id)
     // const { productId } = useParams();
+    // const params = location.state;
     // const { API_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
-    // alert("id is:"+productId)
     // alert("product name:"+data[productId].name)
     // const location = useLocation();
     // pid ,pname, pquantity, pstatus, pprice
@@ -34,17 +37,18 @@ export default function Product() {
                 </div>
                 <div className="productTopRight">
                     <div className="productInfoTop">
-                        <img src="https://images.pexels.com/photos/7156886/pexels-photo-7156886.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="productInfoImg" />
-                        <span className="productName">Apple Airpods</span>
+                        {/* <img src="https://images.pexels.com/photos/7156886/pexels-photo-7156886.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="productInfoImg" /> */}
+                        <img src={`http://localhost:8000/${params.img}`} alt="" className="productInfoImg" />
+                        <span className="productName">{params.name}</span>
                     </div>
                     <div className="productInfoBottom">
                         <div className="productInfoItem">
                             <span className="productInfoKey">id:</span>
-                            <span className="productInfoValue">123</span>
+                            <span className="productInfoValue">{params.id}</span>
                         </div>
                         <div className="productInfoItem">
                             <span className="productInfoKey">sales:</span>
-                            <span className="productInfoValue">5123</span>
+                            <span className="productInfoValue">{params.price}</span>
                         </div>
                         <div className="productInfoItem">
                             <span className="productInfoKey">active:</span>
@@ -61,7 +65,7 @@ export default function Product() {
                 <form className="productForm">
                     <div className="productFormLeft">
                         <label>Product Name</label>
-                        <input type="text" placeholder="Apple AirPod" />
+                        <input type="text" placeholder={params.name} />
                         <label>In Stock</label>
                         <select name="inStock" id="idStock">
                             <option value="yes">Yes</option>
@@ -75,7 +79,7 @@ export default function Product() {
                     </div>
                     <div className="productFormRight">
                         <div className="productUpload">
-                            <img src="https://images.pexels.com/photos/7156886/pexels-photo-7156886.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="productUploadImg" />
+                            <img src={`http://localhost:8000/${params.img}`} alt="" className="productUploadImg" />
                             <label for="file">
                                 <Publish />
                             </label>
