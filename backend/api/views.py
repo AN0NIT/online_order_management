@@ -247,35 +247,21 @@ def delete_product(request):
     product.delete()
     return api_data_response(ApiResponseMessageType.PRODUCT_DELETED_SUCCESSFULLY)
 
-
 @api_view(['POST'])
 def add_to_cat(request):
     buyer_id = request.data['buyer_id']
     seller_id = request.data['seller_id']
-    category = request.data['category']
-    quantity = int(request.data['quantity'])
-    pnam = request.data['pname']
-    price = int(request.data['price'])
-    image = request.data['image']
+    product_name = request.data['product_name']
 
-    buyer = User.objects.get(id=buyer_id)
+    buyer = User.objects.get(username=buyer_id)
     if (buyer is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    seller = User.objects.get(id=seller_id)
+    seller = User.objects.get(username=seller_id)
     if (seller is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
 
-
-    if price <= 0:
-        return Response('PRODUCT_PRICE_IS_ZERO_OR_LESS')
-    if product_id == "":
-        return Response('PRODUCT_NAME_IS_EMPTY')
-    if quantity <= 0:
-        return Response('PRODUCT_QUANTITY_IS_ZERO')
-    if category == "":
-        return Response('PRODUCT_CATEGORY_INVALID')
-
-    product = Product.objects.get(userid=seller_id, name=pname)
+    #product = Product.objects.get(userid.username=seller_id, name=pname)
+    product = Product.objects.get(userid=seller,name=product_name)
     if (product is None):
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
     if(product.price != price or product.quantity < quantity):
@@ -283,11 +269,14 @@ def add_to_cat(request):
 
     datas = AddToCart.objects.create(
         buyer_id = buyer_id,
+        seller_id = seller_id,
         #seller_id = seller_id,
-        product_id =product,
+        product_name = product_name,
+        product_id = product
     )
     #product.quantity = product.quantity - quantity
     return Response('ADDED_TO_CART')
+
 
 
 @api_view(['GET'])
@@ -352,7 +341,6 @@ def get_cart_from_a_buyer(request):
     cartProducts = AddToCart.objects.all().filter(id=order_id, buyer_id=buyer_id)
     serializer = CartSerializer(cartProducts, many=True)
     return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
-
 
 
 @api_view(['POST'])

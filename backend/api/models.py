@@ -8,7 +8,7 @@ from pandas import DataFrame
 
 def upload_to(instance, filename):
     #return 'images/{filename}'.format(filename=filename)
-    return '/'.join(['content', instance.userid.username, str(instance.id),filename])
+    return '/'.join(['content', str(instance.userid.id),filename])
 
 class Image(models.Model):
     title = models.CharField(max_length=200)
@@ -89,9 +89,10 @@ class AddToCart(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     #buyer_id = models.ForeignKey(User, on_delete=models.CASCADE)
     buyer_id =  models.CharField(max_length=150)
+    seller_id =  models.CharField(max_length=150)
+    product_name =  models.CharField(max_length=150)
     #seller_id = models.ForeignKey(User, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE) 
-
     def get_seller(self):
         return self.product_id.usedid.username
 

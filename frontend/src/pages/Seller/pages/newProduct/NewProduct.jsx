@@ -42,11 +42,14 @@ export default function NewProduct() {
   //
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setImageContent(reader.result);
-    };
+    // const reader = new FileReader();
+    const formData = new FormData();   
+    formData.append('file', file)
+    // reader.readAsDataURL(file);
+    // reader.onloadend = () => {
+    //   setImageContent(reader.result);
+    // };
+    setImageContent(formData)
   };
 
   //
@@ -95,19 +98,19 @@ export default function NewProduct() {
 
   const createProduct = (e) => {
 
-    let form_data = new FormData()
+    // let form_data = new FormData()
     e.preventDefault();
     const name = e.target.name.value;
-    const price = e.target.price.value;
-    alert("price is " + price)
-    // const price = dpPrice;
+    // const price = e.target.price.value;    
+    // alert("price is " + price)
+    const price = dpPrice;
     const category = e.target.category.value;
     const quantity = e.target.quantity.value;
-    alert("quantity is " + quantity)
-    // console.log("====" + imageContent.toString())
-    alert("image:"+imageContent);
+    // alert("quantity is " + quantity)
+    // // console.log("====" + imageContent.toString())
+    // alert("image:"+imageContent);
     const status = e.target.status.value;
-    const image = e.target.files[0];
+    // const image = e.target.files[0];
     //add_product(name, price, category, quantity, status, imageContent.selectedFile);
     add_product(name, price, category, quantity, status, imageContent);
   }

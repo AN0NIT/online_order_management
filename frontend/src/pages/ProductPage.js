@@ -336,7 +336,7 @@ export default function ProductPage() {
 
 
                 {!isBasePage && <div>
-                    <div style={{ marginLeft: "5%", marginBottom: "2%" }}>
+                    <div style={{ marginLeft: "5%", marginBottom: "2%",paddingLeft:"50px" }}>
                         <select value={category} onChange={(e) => { setcategory(e.target.value) }}>
                             <option value=''>Select a category</option>
                             <option value="Electronics">Electronics</option>
@@ -344,7 +344,7 @@ export default function ProductPage() {
                             <option value="Clothing">Clothing</option>
                         </select>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center",justifyContent:"center",gap:"25px",flexWrap:"wrap",padding:"50px" }}>
 
                         {/* {Data.map((item) => {
                             if (category === item.category)
@@ -365,7 +365,7 @@ export default function ProductPage() {
                         {Data.map((item) => {
                             if (category === item.category)
                                 return (
-                                    <div class="mt-2 grid grid-cols-1 gap-y-10 gap-x-2 sm:grid-cols-2 lg:grid-cols-2 xl:gap-x-2">
+                                    <div class="mt-2 grid grid-cols-1 gap-y-10 gap-x-2 sm:grid-cols-2 lg:grid-cols-1 xl:gap-x-2">
                                     <div class="group relative">
                                     {/* <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"> */}
                                         <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
@@ -385,6 +385,7 @@ export default function ProductPage() {
                                         </div>
                                     </div>
                                     </div>
+                                    
                                 )
                         })}
                         {/* ---- */}
