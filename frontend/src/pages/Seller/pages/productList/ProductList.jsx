@@ -65,7 +65,7 @@ export default function SellerProductList() {
   };
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    { field: "id", headerName: "ID", width: 100 },
     { field: "pid", headerName: "Product ID", width: 300 },
     {
       field: "product",

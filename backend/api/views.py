@@ -251,7 +251,11 @@ def delete_product(request):
 def add_to_cat(request):
     buyer_id = request.data['buyer_id']
     seller_id = request.data['seller_id']
+    quantity = request.data['quantity']
     product_name = request.data['product_name']
+
+    if (quantity <= 0):
+        return Response('INVALID_QUANTITY')
 
     buyer = User.objects.get(username=buyer_id)
     if (buyer is None):
@@ -261,17 +265,17 @@ def add_to_cat(request):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
 
     #product = Product.objects.get(userid.username=seller_id, name=pname)
-    product = Product.objects.get(userid=seller,name=product_name)
+    product = Product.objects.get(userid=seller.id,name=product_name)
     if (product is None):
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
-    if(product.price != price or product.quantity < quantity):
-        return Response('INVALID_PRICE_OR_QUANTITY')
+    if(product.quantity < quantity):
+        return Response('INVALID_QUANTITY')
 
     datas = AddToCart.objects.create(
-        buyer_id = buyer_id,
-        seller_id = seller_id,
+        buyer_id = buyer,
+        seller_id = seller,
+        quantity = quantity,
         #seller_id = seller_id,
-        product_name = product_name,
         product_id = product
     )
     #product.quantity = product.quantity - quantity

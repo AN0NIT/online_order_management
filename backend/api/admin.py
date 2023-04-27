@@ -26,7 +26,8 @@ class CartAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
     #fields = ('id','buyer_id','seller_id','category','quantity','product_id','price')
     #fields = ('id','buyer_id','category','quantity','product_id','price')
-    fields = ('id','buyer_id','seller_id','product_name','product_id')
+    #fields = ('id','buyer_id','seller_id','product_name','product_id')
+    fields = ('id','buyer_id','seller_id','quantity','product_id')
 
 admin.site.register(AddToCart, CartAdmin)
 

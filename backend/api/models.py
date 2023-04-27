@@ -88,13 +88,13 @@ class AddToCart(models.Model):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     #buyer_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    buyer_id =  models.CharField(max_length=150)
-    seller_id =  models.CharField(max_length=150)
-    product_name =  models.CharField(max_length=150)
     #seller_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    buyer_id =  models.ForeignKey(User, on_delete=models.CASCADE,related_name='buyer_cart')
+    seller_id =  models.ForeignKey(User, on_delete=models.CASCADE,related_name='seller_cart')
+    quantity = models.PositiveBigIntegerField(default=1)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE) 
     def get_seller(self):
-        return self.product_id.usedid.username
+        return self.product_id.username
 
     def get_buyer(self):
         return self.buyer_id.username

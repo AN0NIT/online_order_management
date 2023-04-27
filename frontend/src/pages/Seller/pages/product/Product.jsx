@@ -43,20 +43,20 @@ export default function Product(props) {
                     </div>
                     <div className="productInfoBottom">
                         <div className="productInfoItem">
-                            <span className="productInfoKey">id:</span>
+                            <span className="productInfoKey">ID:</span>
                             <span className="productInfoValue">{params.id}</span>
                         </div>
                         <div className="productInfoItem">
-                            <span className="productInfoKey">sales:</span>
+                            <span className="productInfoKey">Price:</span>
                             <span className="productInfoValue">{params.price}</span>
                         </div>
                         <div className="productInfoItem">
-                            <span className="productInfoKey">active:</span>
-                            <span className="productInfoValue">yes</span>
+                            <span className="productInfoKey">Stock:</span>
+                            <span className="productInfoValue">{params.stock}</span>
                         </div>
                         <div className="productInfoItem">
-                            <span className="productInfoKey">in stock:</span>
-                            <span className="productInfoValue">no</span>
+                            <span className="productInfoKey">In stock:</span>
+                            <span className="productInfoValue">{params.status}</span>
                         </div>
                     </div>
                 </div>
@@ -66,13 +66,12 @@ export default function Product(props) {
                     <div className="productFormLeft">
                         <label>Product Name</label>
                         <input type="text" placeholder={params.name} />
-                        <label>In Stock</label>
-                        <select name="inStock" id="idStock">
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
-                        </select>
+                        <label>Price</label>
+                        <input type="text" placeholder={params.price} />
+                        <label>Stock</label>
+                        <input type="text" placeholder={params.stockw} />
                         <label>Active</label>
-                        <select name="active" id="active">
+                        <select name="active" id="active" placeholder={params.status}>
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                         </select>

@@ -394,6 +394,36 @@ export const BackendProvider = ({ children }) => {
             })
     }
 
+
+
+    const edit_product = async (formData) => {
+        if (!user) {
+            alert("User id is null")
+            return
+        }
+        formData.append('username',user.username)
+        // console.log(formData.get('username'))
+        await axios.post(`${API_SERVER_URL}/product/edit/`,
+        // pname = data['name']
+        // price = int(data['price'])
+        // status = data['status']
+        // quantity = int(data['quantity'])
+                formData
+            )
+            .then((res) => {
+                if (res.status == 200) {
+                    console.log(res.data)
+                    const message = res.data.message
+                    switch (message) {
+                        case "PRODUCT_EDITED_SUCCESSFULLY":
+                            // showPopup(res.data, "")
+                            alert(message)
+                            break;
+                    }
+                }
+            })
+    }
+
     const showPopup = async (title, description) => {
         setTitlePopUp(title)
         setDescPopUp(description)

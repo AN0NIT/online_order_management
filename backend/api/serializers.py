@@ -25,4 +25,5 @@ class CartSerializer(serializers.ModelSerializer):
         model = AddToCart
         #fields = ('id','buyer_id','category','quantity','product_id','price','image')
         #fields = ('order_id','buyer_id','seller_id','category','quantity','product_id','price','image')
-        fields = ('id','buyer_id','seller_id','product_name','product_id','quantity')
+        #fields = ('id','buyer_id','seller_id','product_name','product_id','quantity')
+        fields = ('id','buyer_id','seller_id','quantity','product_id')
