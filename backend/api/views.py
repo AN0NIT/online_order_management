@@ -169,7 +169,6 @@ def get_product(request, pid):
     product_data = Product.objects.get(id=pid)
     if (product_data is None):
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
-
     return api_model_response(ApiResponseMessageType.PRODUCT_FOUND, product_data)
 
 

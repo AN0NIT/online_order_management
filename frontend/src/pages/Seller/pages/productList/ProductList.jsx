@@ -74,7 +74,7 @@ export default function SellerProductList() {
       renderCell: (params) => {
         return (
           <div className="productListItem">
-            <img className="productListImg" src={params.row.img} alt="" />
+            <img className="productListImg" src={`http://localhost:8000/${params.row.img}`} alt="" />
             {params.row.name}
           </div>
         );
