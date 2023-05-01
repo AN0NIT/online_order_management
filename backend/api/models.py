@@ -99,6 +99,9 @@ class AddToCart(models.Model):
     def get_buyer(self):
         return self.buyer_id.username
 
+    def get_price(self):
+        return self.product_id.price
+
     
 
 class CategoryStockHistory(models.Model):

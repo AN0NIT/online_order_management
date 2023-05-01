@@ -17,7 +17,7 @@ export default function Product(props) {
     console.log("state:"+params.id)
     // const { productId } = useParams();
     // const params = location.state;
-    // const { API_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
+    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
     // alert("product name:"+data[productId].name)
     // const location = useLocation();
     // pid ,pname, pquantity, pstatus, pprice
@@ -38,7 +38,7 @@ export default function Product(props) {
                 <div className="productTopRight">
                     <div className="productInfoTop">
                         {/* <img src="https://images.pexels.com/photos/7156886/pexels-photo-7156886.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500" alt="" className="productInfoImg" /> */}
-                        <img src={`http://localhost:8000/${params.img}`} alt="" className="productInfoImg" />
+                        <img src={`${MEDIA_SERVER_URL}${params.img}`} alt="" className="productInfoImg" />
                         <span className="productName">{params.name}</span>
                     </div>
                     <div className="productInfoBottom">
@@ -78,7 +78,7 @@ export default function Product(props) {
                     </div>
                     <div className="productFormRight">
                         <div className="productUpload">
-                            <img src={`http://localhost:8000/${params.img}`} alt="" className="productUploadImg" />
+                            <img src={`${MEDIA_SERVER_URL}${params.img}`} alt="" className="productUploadImg" />
                             <label for="file">
                                 <Publish />
                             </label>

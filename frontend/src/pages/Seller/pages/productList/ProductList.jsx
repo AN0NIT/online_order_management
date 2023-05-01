@@ -11,7 +11,7 @@ import BackendContext from "context/BackendContext";
 
 
 export default function SellerProductList() {
-  const { API_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
+  const { API_SERVER_URL, MEDIA_SERVER_URL,COOKIE_USER_INFO } = useContext(BackendContext)
   const [products, setProducts] = useState([])
   const user = localStorage.getItem(COOKIE_USER_INFO)
   const userdata = JSON.parse(user)
@@ -74,7 +74,8 @@ export default function SellerProductList() {
       renderCell: (params) => {
         return (
           <div className="productListItem">
-            <img className="productListImg" src={`http://localhost:8000/${params.row.img}`} alt="" />
+            {/* <img className="productListImg" src={`http://localhost:8000/${params.row.img}`} alt="" /> */}
+            <img className="productListImg" src={`${MEDIA_SERVER_URL}${params.row.img}`} alt="" />
             {params.row.name}
           </div>
         );

@@ -1,17 +1,18 @@
 import { autocompleteClasses } from "@mui/material"
-import { useEffect, useState } from "react"
+import { useEffect, useContext,useState } from "react"
 import axios from "axios"
 import phoneimg from "../assets/phone.jpg"
-const SERVER_URL = 'http://127.0.0.1:8000'
+// const SERVER_URL = 'http://127.0.0.1:8000'
 // const SERVER_URL = 'http://ec2-34-209-215-94.us-west-2.compute.amazonaws.com:8000'
-const API_SERVER_URL = `${SERVER_URL}/api`
-export default function ProductPage() {
+// const API_SERVER_URL = `${SERVER_URL}/api`
+import BackendContext from "context/BackendContext";
 
+export default function ProductPage() {
+    const { API_SERVER_URL, MEDIA_SERVER_URL,COOKIE_USER_INFO } = useContext(BackendContext)
     const [isBasePage, setBasePage] = useState(true)
     const [Products, setProducts] = useState([])
     const [Data, setData] = useState([])
     const [category, setcategory] = useState('Electronics')
-
     const loadData = async () => {
         let tmp = []
         await axios.get(`${API_SERVER_URL}/product/allproducts/`)
@@ -369,7 +370,7 @@ export default function ProductPage() {
                                     <div class="group relative">
                                     {/* <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"> */}
                                         <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                                            <img src="https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg" alt="Front of men&#039;s Basic Tee in black." class="w-full h-full object-center object-cover lg:w-full lg:h-full" />
+                                            <img src={`${MEDIA_SERVER_URL}${item.img}`} alt="Front of men&#039;s Basic Tee in black." class="w-full h-full object-center object-cover lg:w-full lg:h-full" />
                                         </div>
                                         <div class="mt-4 flex justify-between">
                                             <div>

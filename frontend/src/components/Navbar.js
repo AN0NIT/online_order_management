@@ -10,7 +10,7 @@ import logo_big from 'assets/asiet.png'
 import CartPopup from 'pages/Buyer/CartPage'
 
 const buyerNavigation = [
-  { name: 'More', href: '#', current: false },
+  { name: 'More', href: '/product', current: false },
   { name: 'Orders', href: '#', current: false },
 ]
 const sellerNavigation = [
@@ -53,11 +53,11 @@ function SearchBar() {
 }
 
 function NavigationLinks() {
-  const {isBuyer,isSeller} = useContext(BackendContext);
+  const { isBuyer, isSeller } = useContext(BackendContext);
   return (
     <div class="hidden md:block">
       <div class="text-left h-auto flex flex-1 items-baseline space-x-4">
-        {isBuyer&&buyerNavigation.map((item) => (
+        {isBuyer && buyerNavigation.map((item) => (
           <Link
             key={item.name}
             to={item.href}
@@ -72,7 +72,7 @@ function NavigationLinks() {
             {item.name}
           </Link>
         ))}
-        {isSeller&&sellerNavigation.map((item) => (
+        {isSeller && sellerNavigation.map((item) => (
           <Link
             key={item.name}
             to={item.href}
@@ -95,7 +95,7 @@ function NavigationLinks() {
 
 function ShoppingCart() {
   const context = useContext(BackendContext);
-  const {isBuyer} = context;
+  const { isBuyer } = context;
   return (
     <Link to={`${isBuyer ? '/buyer/cart' : '/'}`}>
       <button
@@ -110,9 +110,9 @@ function ShoppingCart() {
 }
 
 function Profile() {
-  const { isAuth } = useContext(UserContext)
+  const { isBuyer, isSeller, isAuth } = useContext(BackendContext);
 
-  if (isAuth) {
+  if (isAuth && isBuyer) {
     return (
       <Link to='/about' >
         <div class='w-8'>
@@ -124,25 +124,38 @@ function Profile() {
     )
   }
 
-  return (
-    <Link to='/login' >
-      <div class='w-8'>
-        <button class="bg-white p-1 rounded-full text-suyati-yellow"  >
-          <LoginIcon class='w-full h-full' />
-        </button>
-      </div>
-    </Link>
-  )
+  else if (isAuth && isSeller) {
+    return (
+      <Link to='/seller/about' >
+        <div class='w-8'>
+          <button class="bg-white p-1 rounded-full text-suyati-yellow"  >
+            <UserIcon class='w-full h-full' />
+          </button>
+        </div>
+      </Link>
+    )
+  }
+  else {
+    return (
+      <Link to='/login' >
+        <div class='w-8'>
+          <button class="bg-white p-1 rounded-full text-suyati-yellow"  >
+            <LoginIcon class='w-full h-full' />
+          </button>
+        </div>
+      </Link>
+    )
+  }
 }
 
 function MobileDropDownPanel() {
 
   const { user, isAuth } = useContext(UserContext)
-  const {isBuyer,isSeller} = useContext(BackendContext);
+  const { isBuyer, isSeller } = useContext(BackendContext);
   return (
     <Disclosure.Panel class="md:hidden">
       <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      {isBuyer&&buyerNavigation.map((item) => (
+        {isBuyer && buyerNavigation.map((item) => (
           <Disclosure.Button
             key={item.name}
             as="a"
@@ -156,7 +169,7 @@ function MobileDropDownPanel() {
             {item.name}
           </Disclosure.Button>
         ))}
-        {isSeller&&sellerNavigation.map((item) => (
+        {isSeller && sellerNavigation.map((item) => (
           <Disclosure.Button
             key={item.name}
             as="a"
