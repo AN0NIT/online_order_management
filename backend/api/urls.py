@@ -16,9 +16,9 @@ urlpatterns = [
          views.get_all_products_from_a_user, name='get_all_products_from_a_user'),
 
     # Product apis
-    path('api/product/:pid', views.get_product, name='get_product'),
+    path('api/product/<uuid:pid>', views.get_product, name='get_product'),
     path('api/product/add/', views.add_product, name='add_product'),
-    path('api/product/edit/:pid', views.edit_product, name='edit_product'),
+    path('api/product/edit/<uuid:pid>', views.edit_product, name='edit_product'),
     path('api/product/delete/', views.delete_product, name='delete_product'),
     path('api/product/category/all/', views.get_available_categories,
          name='get_available_categories'),
@@ -26,7 +26,7 @@ urlpatterns = [
 
     # Cart apis
     path('api/addtocart/add/', views.add_to_cat, name='add_to_cart'),
-    path('api/addtocart/edit/:pid', views.edit_cart_item, name='edit_cart'),
+    path('api/addtocart/edit/<uuid:pid>', views.edit_cart_item, name='edit_cart'),
     path('api/addtocart/delete/', views.delete_cart_item, name='delete_from_cart'),
     path('api/addtocart/all/', views.get_cart_from_a_buyer,
          name='get_cart_from_a_buyer'),

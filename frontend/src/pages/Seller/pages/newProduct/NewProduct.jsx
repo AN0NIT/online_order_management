@@ -102,7 +102,7 @@ export default function NewProduct() {
     // let form_data = new FormData()
     e.preventDefault();
 
-    const formData = new FormData();   
+    const formData = new FormData();
     const name = e.target.name.value;
     formData.append('name', name)
     const price = dpPrice;

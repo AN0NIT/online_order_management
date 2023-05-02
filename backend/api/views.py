@@ -183,7 +183,7 @@ def add_product(request):
     status = data['status']
     image = data['image']
     username = data['username']
-    print("image:",image)
+    # print("image:",image)
     if price <= 0:
         return Response('PRODUCT_PRICE_IS_ZERO_OR_LESS')
     if pname == "":
@@ -212,26 +212,43 @@ def add_product(request):
     return api_data_response(ApiResponseMessageType.PRODUCT_ADDED_SUCCESSFULLY)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def edit_product(request, pid):
     data = request.data
     pname = data['name']
     price = int(data['price'])
-    status = data['status']
+    status = int(data['status'])
     quantity = int(data['quantity'])
+    image  = data['image']
+    userid = data['userid']
+    # print("edit pro userid:",type(userid))
+    user = User.objects.get(id=userid)
+    # print(user)
+    if (user is None):
+        return api_model_response(ApiResponseMessageType.USER_INVALID)
     if price <= 0:
         return Response('PRODUCT_PRICE_INVALID')
     elif pname == "":
         return Response('PRODUCT_NAME_EMPTY')
-
     product = Product.objects.get(id=pid)
+    # print("product.userid.id:",product.userid.id,"!=",user.id)
+    if(product.userid.id != user.id ):
+        return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
     if (product is None):
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+    # print('pname:',type(pname),pname)
+    # print('price:',type(price),price)
+    # print('quantity:',type(quantity),quantity)
+    # print('image:',type(image),image)
+    # print('status:',type(status),status)
+    # print('userid:',type(userid),userid)
     product.name = pname
     product.price = price
     product.quantity = quantity
     product.edited_date = date.today()
     product.status = status
+    if image is not 'null':
+        product.image = image
     product.save()
     return Response('PRODUCT_EDITED_SUCCESSFULLY')
 

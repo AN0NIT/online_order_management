@@ -90,9 +90,9 @@ class AddToCart(models.Model):
     #buyer_id = models.ForeignKey(User, on_delete=models.CASCADE)
     #seller_id = models.ForeignKey(User, on_delete=models.CASCADE)
     buyer_id =  models.ForeignKey(User, on_delete=models.CASCADE,related_name='buyer_cart')
-    seller_id =  models.ForeignKey(User, on_delete=models.CASCADE,related_name='seller_cart')
     quantity = models.PositiveBigIntegerField(default=1)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE) 
+    ispurchased = models.BooleanField(default=False)
     def get_seller(self):
         return self.product_id.username
 

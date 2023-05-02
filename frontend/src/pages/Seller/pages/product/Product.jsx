@@ -14,15 +14,40 @@ import { useLocation } from 'react-router-dom';
 export default function Product(props) {
     const location = useLocation();
     const params = location.state;
-    console.log("state:"+params.id)
-    // const { productId } = useParams();
-    // const params = location.state;
-    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
-    // alert("product name:"+data[productId].name)
-    // const location = useLocation();
-    // pid ,pname, pquantity, pstatus, pprice
-    // const { pid, pname, pquantity, pstatus, pprice } = location.state;
-    // alert("productId "+pid)
+    const [updateData, setUpdateData] = useState({name:params.name, price:params.price, quantity:params.stock, status:params.status == "active" ? 1 : 0});
+    const [imageContent, setImageContent] = useState(null);
+    const { edit_product, MEDIA_SERVER_URL } = useContext(BackendContext)
+    
+
+    const handleImageChange = (e) => {
+        e.preventDefault();
+        const file = e.target.files[0];
+        setImageContent(file)
+      };
+
+
+    const handleChange = (e) => {
+        e.preventDefault();
+        setUpdateData({
+            ...updateData,
+            [e.target.name]:e.target.value
+        })
+    };
+
+    const editProduct = async (e) => {
+        e.preventDefault();
+        console.log('edited data:',updateData)
+        const formData = new FormData();
+        formData.append('name', updateData.name)
+        formData.append('price', updateData.price)
+        formData.append('quantity', updateData.quantity)
+        formData.append('status', updateData.status)
+        formData.append('image', imageContent)
+        await edit_product(formData, params.pid);
+      }
+
+
+
     return (
         <div className="product md:m-auto md:w-2/3">
             <div className="productTitleContainer">
@@ -62,18 +87,18 @@ export default function Product(props) {
                 </div>
             </div>
             <div className="productBottom">
-                <form className="productForm">
+                <form onSubmit={editProduct} className="productForm">
                     <div className="productFormLeft">
                         <label>Product Name</label>
-                        <input type="text" placeholder={params.name} />
+                        <input type="text" name="name" onChange={handleChange} id="name" placeholder={params.name} />
                         <label>Price</label>
-                        <input type="text" placeholder={params.price} />
+                        <input type="text" name="price" onChange={handleChange} id="price" placeholder={params.price} />
                         <label>Stock</label>
-                        <input type="text" placeholder={params.stockw} />
+                        <input type="text" name="quantity" onChange={handleChange} id="quantity" placeholder={params.stock} />
                         <label>Active</label>
-                        <select name="active" id="active" placeholder={params.status}>
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <select name="status" id="status" onChange={handleChange} placeholder={params.status}>
+                            <option value={1}>Yes</option>
+                            <option value={0}>No</option>
                         </select>
                     </div>
                     <div className="productFormRight">
@@ -82,9 +107,9 @@ export default function Product(props) {
                             <label for="file">
                                 <Publish />
                             </label>
-                            <input type="file" id="file" style={{ display: "none" }} />
+                            <input type="file" name="image" id="file" onChange={handleImageChange} style={{ display: "none" }} />
                         </div>
-                        <button className="productButton">Update</button>
+                        <button className="productButton" type="submit">Update</button>
                     </div>
                 </form>
             </div>

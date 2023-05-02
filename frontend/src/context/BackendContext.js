@@ -397,14 +397,14 @@ export const BackendProvider = ({ children }) => {
 
 
 
-    const edit_product = async (formData) => {
+    const edit_product = async (formData, pid) => {
         if (!user) {
             alert("User id is null")
             return
         }
-        formData.append('username',user.username)
+        formData.append('userid',user.id)
         // console.log(formData.get('username'))
-        await axios.post(`${API_SERVER_URL}/product/edit/`,
+        await axios.post(`${API_SERVER_URL}/product/edit/${pid}`,
         // pname = data['name']
         // price = int(data['price'])
         // status = data['status']
@@ -448,7 +448,7 @@ export const BackendProvider = ({ children }) => {
 
             //Product
             categories,
-            add_product,
+            add_product,edit_product,
         }}>
             {children}
         </BackendContext.Provider>
