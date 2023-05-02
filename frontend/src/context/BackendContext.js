@@ -366,19 +366,13 @@ export const BackendProvider = ({ children }) => {
             })
     }
 
-    //const add_product = async (name, price, category, quantity, status, imagee) => {
     const add_product = async (formData) => {
         if (!user) {
             alert("User id is null")
             return
         }
         formData.append('username',user.username)
-        // console.log(formData.get('username'))
         await axios.post(`${API_SERVER_URL}/product/add/`,
-            // {
-            //     name: name, price: price, category: category, quantity: quantity, status: status,
-            //     image: imagee, username: user.username
-            // }
                 formData
             )
             .then((res) => {

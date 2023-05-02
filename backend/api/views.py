@@ -348,18 +348,11 @@ def delete_cart_item(request):
 
 @api_view(['POST'])
 def get_cart_from_a_buyer(request):
-    order_id = request.data['order_id']
     buyer_id = request.data['buyer_id']
-    seller_id = request.data['seller_id']
-    buyer = User.objects.get(username=buyer_id)
+    buyer = User.objects.get(id=buyer_id)
     if (buyer is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-
-    seller = User.objects.get(username=seller_id)
-    if (seller is None):
-        return api_model_response(ApiResponseMessageType.USER_INVALID)
-
-    cartProducts = AddToCart.objects.all().filter(id=order_id, buyer_id=buyer_id)
+    cartProducts = AddToCart.objects.all().filter(buyer_id=buyer_id)
     serializer = CartSerializer(cartProducts, many=True)
     return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
 
