@@ -26,8 +26,8 @@ urlpatterns = [
 
     # Cart apis
     path('api/addtocart/add/', views.add_to_cat, name='add_to_cart'),
-    path('api/addtocart/edit/<uuid:pid>', views.edit_cart_item, name='edit_cart'),
-    path('api/addtocart/delete/', views.delete_cart_item, name='delete_from_cart'),
+    path('api/addtocart/edit/<uuid:order_id>', views.edit_cart_item, name='edit_cart'),
+    path('api/addtocart/delete/<uuid:order_id>', views.delete_cart_item, name='delete_from_cart'),
     path('api/addtocart/all/', views.get_cart_from_a_buyer,
          name='get_cart_from_a_buyer'),
     

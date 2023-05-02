@@ -108,6 +108,9 @@ export const BackendProvider = ({ children }) => {
     // Products
     const [categories, setCategories] = useState([])
 
+    // Carts
+    const [buyerCart, setBuyerCart] = useState([])
+
     useEffect(() => {
 
         get_available_categories()
@@ -366,6 +369,8 @@ export const BackendProvider = ({ children }) => {
             })
     }
 
+
+    // Products
     const add_product = async (formData) => {
         if (!user) {
             alert("User id is null")
@@ -397,14 +402,9 @@ export const BackendProvider = ({ children }) => {
             return
         }
         formData.append('userid',user.id)
-        // console.log(formData.get('username'))
         await axios.post(`${API_SERVER_URL}/product/edit/${pid}`,
-        // pname = data['name']
-        // price = int(data['price'])
-        // status = data['status']
-        // quantity = int(data['quantity'])
                 formData
-            )
+        )
             .then((res) => {
                 if (res.status == 200) {
                     console.log(res.data)
@@ -415,6 +415,72 @@ export const BackendProvider = ({ children }) => {
                             alert(message)
                             break;
                     }
+                }
+            })
+    }
+
+    // Carts
+    const add_to_cart = async (formData) => {
+        if (!user) {
+            alert("User id is null")
+            return
+        }
+        formData.append('username',user.username)
+        await axios.post(`${API_SERVER_URL}/product/add/`,
+                formData
+            )
+            .then((res) => {
+                if (res.status == 200) {
+                    console.log(res.data)
+                    const message = res.data.message
+                    switch (message) {
+                        case "PRODUCT_ADDED_SUCCESSFULLY":
+                            // showPopup(res.data, "")
+                            alert(message)
+                            break;
+                    }
+                }
+            })
+    }
+
+
+
+    const edit_cart = async (formData, pid) => {
+        if (!user) {
+            alert("User id is null")
+            return
+        }
+        formData.append('userid',user.id)
+        await axios.post(`${API_SERVER_URL}/product/edit/${pid}`,
+                formData
+        )
+            .then((res) => {
+                if (res.status == 200) {
+                    console.log(res.data)
+                    const message = res.data.message
+                    switch (message) {
+                        case "PRODUCT_EDITED_SUCCESSFULLY":
+                            // showPopup(res.data, "")
+                            alert(message)
+                            break;
+                    }
+                }
+            })
+    }
+
+
+    const get_cart_from_buyer = async () => {
+        if (!user) {
+            alert("User id is null")
+            return
+        }
+        axios.post(`${API_SERVER_URL}/addtocart/all/`, {
+            'buyer_id':user.userid
+        })
+            .then((res) => {
+                if (res.status == 200) {
+                    console.log(res.data)
+                    setBuyerCart(res.data)
                 }
             })
     }
@@ -442,7 +508,7 @@ export const BackendProvider = ({ children }) => {
 
             //Product
             categories,
-            add_product,edit_product,
+            add_product,edit_product,get_cart_from_buyer,
         }}>
             {children}
         </BackendContext.Provider>

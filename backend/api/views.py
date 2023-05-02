@@ -267,32 +267,25 @@ def delete_product(request):
 @api_view(['POST'])
 def add_to_cat(request):
     buyer_id = request.data['buyer_id']
-    seller_id = request.data['seller_id']
-    quantity = request.data['quantity']
-    product_name = request.data['product_name']
+    quantity = int(request.data['quantity'])
+    product_id = request.data['product_id']
 
     if (quantity <= 0):
         return Response('INVALID_QUANTITY')
 
-    buyer = User.objects.get(username=buyer_id)
+    buyer = User.objects.get(id=buyer_id)
     if (buyer is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    seller = User.objects.get(username=seller_id)
-    if (seller is None):
-        return api_model_response(ApiResponseMessageType.USER_INVALID)
-
     #product = Product.objects.get(userid.username=seller_id, name=pname)
-    product = Product.objects.get(userid=seller.id,name=product_name)
+    product = Product.objects.get(id=product_id)
     if (product is None):
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
-    if(product.quantity < quantity):
+    elif(product.quantity < quantity):
         return Response('INVALID_QUANTITY')
 
     datas = AddToCart.objects.create(
         buyer_id = buyer,
-        seller_id = seller,
         quantity = quantity,
-        #seller_id = seller_id,
         product_id = product
     )
     #product.quantity = product.quantity - quantity
@@ -300,45 +293,29 @@ def add_to_cat(request):
 
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def edit_cart_item(request, order_id):
     data = request.data
-    price = int(data['price'])
     quantity = int(data['quantity'])
     buyer_id = request.data['buyer_id']
-    seller_id = request.data['seller_id']
-    seller = User.objects.get(id=seller_id)
-    if (seller is None):
-        return api_model_response(ApiResponseMessageType.USER_INVALID)
+
+    if quantity <= 0:
+        return Response('CART_IS_EMPTY')
     buyer = User.objects.get(id=buyer_id)
     if( buyer is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    if price <= 0:
-        return Response('PRODUCT_PRICE_INVALID')
-    elif quantity <= 0:
-        return Response('CART_IS_EMPTY')
-
     cartProduct = AddToCart.objects.get(id=order_id)
     if (cartProduct is None):
         return Response('SOMETHING_WENT_WRONG')
-    cartProduct.price = price
+    elif( quantity > cartProduct.product_id.quantity):
+        return Response('INVALID_QUANTITY')
     cartProduct.quantity = quantity
     cartProduct.save()
-    #product.quantity = product.quantity - quantity
     return Response('CART_EDITED_SUCCESSFULLY')
 
 
-@api_view(['POST'])
-def delete_cart_item(request):
-    order_id = request.data['product_id']
-    buyer_id = request.data['buyer_id']
-    seller_id = request.data['seller_id']
-    seller = User.objects.get(username=seller_id)
-    if (seller is None):
-        return api_model_response(ApiResponseMessageType.USER_INVALID)
-    buyer = User.objects.get(username=buyer_id)
-    if( buyer is None):
-        return api_model_response(ApiResponseMessageType.USER_INVALID)
+@api_view(['GET'])
+def delete_cart_item(request, order_id):
     cartProduct = AddToCart.objects.get(id=order_id)
     if (cartProduct is None):
         return Response('SOMETHING_WENT_WRONG')
