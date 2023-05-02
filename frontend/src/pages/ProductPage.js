@@ -1,5 +1,5 @@
 import { autocompleteClasses } from "@mui/material"
-import { useEffect, useContext,useState } from "react"
+import { useEffect, useContext, useState } from "react"
 import axios from "axios"
 import phoneimg from "../assets/phone.jpg"
 // const SERVER_URL = 'http://127.0.0.1:8000'
@@ -8,7 +8,7 @@ import phoneimg from "../assets/phone.jpg"
 import BackendContext from "context/BackendContext";
 
 export default function ProductPage() {
-    const { API_SERVER_URL, MEDIA_SERVER_URL,COOKIE_USER_INFO } = useContext(BackendContext)
+    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
     const [isBasePage, setBasePage] = useState(true)
     const [Products, setProducts] = useState([])
     const [Data, setData] = useState([])
@@ -23,15 +23,17 @@ export default function ProductPage() {
                     const stuff = res.data.data;
                     for (let i = 0; i < stuff.length; i++) {
                         const product = stuff[i]
-                        tmp.push({
-                            id: i,
-                            name: product.name,
-                            img: product.image,
-                            stock: product.quantity,
-                            category: product.category === 1 ? 'Electronics' : product.category === 2 ? 'Furniture' : 'Clothing',
-                            status: product.status == 1 ? "active" : "inactive",
-                            price: product.price,
-                        })
+                        if (product.status == 1) {
+                            tmp.push({
+                                id: i,
+                                name: product.name,
+                                img: product.image,
+                                stock: product.quantity,
+                                category: product.category === 1 ? 'Electronics' : product.category === 2 ? 'Furniture' : 'Clothing',
+                                status: product.status == 1 ? "active" : "inactive",
+                                price: product.price,
+                            })
+                        }
                     }
                     setData(tmp)
                 }
@@ -337,7 +339,7 @@ export default function ProductPage() {
 
 
                 {!isBasePage && <div>
-                    <div style={{ marginLeft: "5%", marginBottom: "2%",paddingLeft:"50px" }}>
+                    <div style={{ marginLeft: "5%", marginBottom: "2%", paddingLeft: "50px" }}>
                         <select value={category} onChange={(e) => { setcategory(e.target.value) }}>
                             <option value=''>Select a category</option>
                             <option value="Electronics">Electronics</option>
@@ -345,7 +347,7 @@ export default function ProductPage() {
                             <option value="Clothing">Clothing</option>
                         </select>
                     </div>
-                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center",justifyContent:"center",gap:"25px",flexWrap:"wrap",padding:"50px" }}>
+                    <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "25px", flexWrap: "wrap", padding: "50px" }}>
 
                         {/* {Data.map((item) => {
                             if (category === item.category)
@@ -367,26 +369,26 @@ export default function ProductPage() {
                             if (category === item.category)
                                 return (
                                     <div class="mt-2 grid grid-cols-1 gap-y-10 gap-x-2 sm:grid-cols-2 lg:grid-cols-1 xl:gap-x-2">
-                                    <div class="group relative">
-                                    {/* <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"> */}
-                                        <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                                            <img src={`${MEDIA_SERVER_URL}${item.img}`} alt="Front of men&#039;s Basic Tee in black." class="w-full h-full object-center object-cover lg:w-full lg:h-full" />
-                                        </div>
-                                        <div class="mt-4 flex justify-between">
-                                            <div>
-                                                <h3 class="text-sm text-gray-700">
-                                                    <a href="#">
-                                                        <span aria-hidden="true" class="absolute inset-0"></span>
-                                                        {item.name}
-                                                    </a>
-                                                </h3>
-                                                <p class="mt-1 text-sm text-gray-500">{item.category}</p>
+                                        <div class="group relative">
+                                            {/* <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"> */}
+                                            <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                                                <img src={`${MEDIA_SERVER_URL}${item.img}`} alt="Front of men&#039;s Basic Tee in black." class="w-full h-full object-center object-cover lg:w-full lg:h-full" />
                                             </div>
-                                            <p class="text-sm font-medium text-gray-900">Rs {item.price}</p>
+                                            <div class="mt-4 flex justify-between">
+                                                <div>
+                                                    <h3 class="text-sm text-gray-700">
+                                                        <a href="#">
+                                                            <span aria-hidden="true" class="absolute inset-0"></span>
+                                                            {item.name}
+                                                        </a>
+                                                    </h3>
+                                                    <p class="mt-1 text-sm text-gray-500">{item.category}</p>
+                                                </div>
+                                                <p class="text-sm font-medium text-gray-900">Rs {item.price}</p>
+                                            </div>
                                         </div>
                                     </div>
-                                    </div>
-                                    
+
                                 )
                         })}
                         {/* ---- */}

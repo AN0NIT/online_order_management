@@ -265,7 +265,7 @@ def delete_product(request):
     return api_data_response(ApiResponseMessageType.PRODUCT_DELETED_SUCCESSFULLY)
 
 @api_view(['POST'])
-def add_to_cat(request):
+def add_cart_item(request):
     buyer_id = request.data['buyer_id']
     quantity = int(request.data['quantity'])
     product_id = request.data['product_id']
