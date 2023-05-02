@@ -426,7 +426,7 @@ export const BackendProvider = ({ children }) => {
             return
         }
         formData.append('username',user.username)
-        await axios.post(`${API_SERVER_URL}/product/add/`,
+        await axios.post(`${API_SERVER_URL}/addtocart/add/`,
                 formData
             )
             .then((res) => {
@@ -434,7 +434,7 @@ export const BackendProvider = ({ children }) => {
                     console.log(res.data)
                     const message = res.data.message
                     switch (message) {
-                        case "PRODUCT_ADDED_SUCCESSFULLY":
+                        case "ADDED_TO_CART":
                             // showPopup(res.data, "")
                             alert(message)
                             break;
@@ -445,13 +445,13 @@ export const BackendProvider = ({ children }) => {
 
 
 
-    const edit_cart = async (formData, pid) => {
+    const edit_cart = async (formData, order_id) => {
         if (!user) {
             alert("User id is null")
             return
         }
         formData.append('userid',user.id)
-        await axios.post(`${API_SERVER_URL}/product/edit/${pid}`,
+        await axios.post(`${API_SERVER_URL}/addtocart/edit/${order_id}`,
                 formData
         )
             .then((res) => {
@@ -459,7 +459,7 @@ export const BackendProvider = ({ children }) => {
                     console.log(res.data)
                     const message = res.data.message
                     switch (message) {
-                        case "PRODUCT_EDITED_SUCCESSFULLY":
+                        case "CART_EDITED_SUCCESSFULLY":
                             // showPopup(res.data, "")
                             alert(message)
                             break;
@@ -479,7 +479,7 @@ export const BackendProvider = ({ children }) => {
         })
             .then((res) => {
                 if (res.status == 200) {
-                    console.log(res.data)
+                    console.log('resdata:',res.data)
                     setBuyerCart(res.data)
                 }
             })
@@ -503,12 +503,16 @@ export const BackendProvider = ({ children }) => {
             showPopup, titlePopUp, descPopUp, setOpenPopUp,
 
             // Backend
-            user, isSeller, isBuyer, isAuth,
+            user, isSeller, isBuyer, isAuth,buyerCart,
             login, signup, logout,
 
             //Product
             categories,
-            add_product,edit_product,get_cart_from_buyer,
+            add_product,edit_product,
+
+
+            //Cart
+            add_to_cart,edit_cart,get_cart_from_buyer,
         }}>
             {children}
         </BackendContext.Provider>

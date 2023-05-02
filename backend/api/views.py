@@ -264,6 +264,15 @@ def delete_product(request):
     product.delete()
     return api_data_response(ApiResponseMessageType.PRODUCT_DELETED_SUCCESSFULLY)
 
+
+# Cart
+@api_view(['GET'])
+def get_cart(request, order_id):
+    cart_item = AddToCart.objects.get(id=order_id)
+    if (cart_item is None):
+        return Response('NO_CART_ITEM_FOUND')
+    return api_model_response(ApiResponseMessageType.PRODUCT_FOUND, cart_item)
+
 @api_view(['POST'])
 def add_cart_item(request):
     buyer_id = request.data['buyer_id']
