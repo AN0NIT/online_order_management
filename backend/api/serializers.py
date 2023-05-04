@@ -21,6 +21,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class CartSerializer(serializers.ModelSerializer):
+    product_data = ProductSerializer(read_only=True)
+    
     class Meta:
         model = AddToCart
-        fields = ('id','buyer_id','quantity','product_id','ispurchased')
+        fields = ('id', 'buyer_id', 'quantity', 'product_id', 'product_data', 'ispurchased') 

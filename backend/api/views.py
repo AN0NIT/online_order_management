@@ -335,10 +335,18 @@ def delete_cart_item(request, order_id):
 @api_view(['POST'])
 def get_cart_from_a_buyer(request):
     buyer_id = request.data['buyer_id']
+    ispurchased = request.data['isPurchased']
+    print('\n\n\n\nbuyer_id:',buyer_id,type(buyer_id))
+    print('\n\n\n\n',ispurchased,type(ispurchased))
     buyer = User.objects.get(id=buyer_id)
     if (buyer is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    cartProducts = AddToCart.objects.all().filter(buyer_id=buyer_id)
+    # cartProducts = AddToCart.objects.all().filter(buyer_id=buyer_id,ispurchased=ispurchased)
+    cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased)
+    # cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased).values('id', 'buyer_id', 'quantity', 'product_id', 'ispurchased',  'product_id__name', 'product_id__price', 'product_id__image')
+    if not cartProducts:
+        return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
+    print('\n\n\n\n',cartProducts,'\n\n\n\n')
     serializer = CartSerializer(cartProducts, many=True)
     return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
 

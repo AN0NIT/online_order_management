@@ -8,7 +8,7 @@ import phoneimg from "../assets/phone.jpg"
 import BackendContext from "context/BackendContext";
 
 export default function ProductPage() {
-    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
+    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO, add_to_cart} = useContext(BackendContext)
     const [isBasePage, setBasePage] = useState(true)
     const [Products, setProducts] = useState([])
     const [Data, setData] = useState([])
@@ -26,6 +26,7 @@ export default function ProductPage() {
                         if (product.status == 1) {
                             tmp.push({
                                 id: i,
+                                pid: product.id,
                                 name: product.name,
                                 img: product.image,
                                 stock: product.quantity,
@@ -40,9 +41,13 @@ export default function ProductPage() {
             })
     }
 
+    const addProduct = async (item) => {
+        await add_to_cart(item.pid,1);
+      }
     useEffect(() => {
         loadData()
     }, [])
+
 
 
     return (
@@ -385,6 +390,9 @@ export default function ProductPage() {
                                                     <p class="mt-1 text-sm text-gray-500">{item.category}</p>
                                                 </div>
                                                 <p class="text-sm font-medium text-gray-900">Rs {item.price}</p>
+                                            </div>
+                                            <div>
+                                                <button onClick={addProduct(item)} style={{float:"right", background: "red"}}> Add</button>
                                             </div>
                                         </div>
                                     </div>

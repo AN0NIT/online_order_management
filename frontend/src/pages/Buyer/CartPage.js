@@ -1,4 +1,4 @@
-import { Fragment, useState, useContext } from 'react'
+import { Fragment, useState, useContext, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
 import { Link } from 'react-router-dom'
@@ -36,17 +36,18 @@ const products = [
 
 
 
+
 function CartItem({ product }) {
-  const { get_cart_from_buyer, edit_cart, buyerCart } = useContext(BackendContext)
+  const { MEDIA_SERVER_URL } = useContext(BackendContext)
   return (
     <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
       <div class="flex w-2/5">
         <div class="w-20">
-          <img class="h-24" src={product.imageSrc} alt={product.imageAlt} />
+          <img class="h-24" src={`${MEDIA_SERVER_URL}${product.image}`} />
         </div>
         <div class="flex flex-col justify-between ml-4 flex-grow">
           <span class="font-bold text-sm">{product.name}</span>
-          <span class="text-red-500 text-xs">{product.href}</span>
+          {/* <span class="text-red-500 text-xs">{product.href}</span> */}
           <a href="#" class="font-semibold hover:text-red-500 text-gray-500 text-xs">Remove</a>
         </div>
       </div>
@@ -72,7 +73,15 @@ function CartItem({ product }) {
 export default function Cart() {
 
   let totalPrice = 0.00;
-
+  const { user, get_cart_from_buyer, cartDetails } = useContext(BackendContext)
+  console.log(user.id)
+  useEffect(() => {
+    if(user.id !== ''){
+      get_cart_from_buyer(user.id,false)
+    }
+  }, [user])
+  console.log('carT',cartDetails.length)
+  // const products = cartDetails[0]
   return (
     <div class="mx-auto md:mx-auto md:w-2/3">
       <div class="flex shadow-md ">
@@ -89,7 +98,7 @@ export default function Cart() {
           </div>
 
           {
-            products.map((product, i) => {
+            cartDetails && cartDetails.map((product, i) => {
               totalPrice += product.price * product.quantity
               return (<CartItem product={product} />);
             })

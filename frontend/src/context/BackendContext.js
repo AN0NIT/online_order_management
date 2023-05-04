@@ -107,14 +107,16 @@ export const BackendProvider = ({ children }) => {
 
     // Products
     const [categories, setCategories] = useState([])
+    const [product, setProduct] = useState([])
 
     // Carts
     const [buyerCart, setBuyerCart] = useState([])
+    const [cartDetails, setCartDetails] = useState([])
 
     useEffect(() => {
 
         get_available_categories()
-
+        console.log("calling useEffect from backendcontext")
         const id = localStorage.getItem(COOKIE_USER_ID)
         if (id) {
             const userInfo = localStorage.getItem(COOKIE_USER_INFO)
@@ -141,7 +143,6 @@ export const BackendProvider = ({ children }) => {
                 localStorage.removeItem(COOKIE_USER_INFO)
             }
         }
-
     }, [])
 
     const login = async (e) => {
@@ -376,10 +377,10 @@ export const BackendProvider = ({ children }) => {
             alert("User id is null")
             return
         }
-        formData.append('username',user.username)
+        formData.append('username', user.username)
         await axios.post(`${API_SERVER_URL}/product/add/`,
-                formData
-            )
+            formData
+        )
             .then((res) => {
                 if (res.status == 200) {
                     console.log(res.data)
@@ -401,9 +402,9 @@ export const BackendProvider = ({ children }) => {
             alert("User id is null")
             return
         }
-        formData.append('userid',user.id)
+        formData.append('userid', user.id)
         await axios.post(`${API_SERVER_URL}/product/edit/${pid}`,
-                formData
+            formData
         )
             .then((res) => {
                 if (res.status == 200) {
@@ -419,16 +420,43 @@ export const BackendProvider = ({ children }) => {
             })
     }
 
-    // Carts
-    const add_to_cart = async (formData) => {
+    const get_product = async (product_id) => {
+        console.log(":", user)
         if (!user) {
             alert("User id is null")
             return
         }
-        formData.append('username',user.username)
+        axios.get(`${API_SERVER_URL}/product/${product_id}`)
+            .then((res) => {
+                if (res.status == 200) {
+                    console.log('productdata:', res.data)
+                    // setProduct(res.data)
+                    return res.data
+                }
+                else {
+                    console.log("nothing")
+                }
+            })
+            .catch((error) => {
+                console.log('error:', error)
+            })
+        console.log('got product deets')
+    }
+
+
+    // Carts
+    const add_to_cart = async (pid, quantity) => {
+        if (!user) {
+            alert("User id is null")
+            return
+        }
         await axios.post(`${API_SERVER_URL}/addtocart/add/`,
-                formData
-            )
+            {
+                product_id: pid,
+                quantity: quantity,
+                buyer_id: user.id,
+            }
+        )
             .then((res) => {
                 if (res.status == 200) {
                     console.log(res.data)
@@ -450,9 +478,9 @@ export const BackendProvider = ({ children }) => {
             alert("User id is null")
             return
         }
-        formData.append('userid',user.id)
+        formData.append('userid', user.id)
         await axios.post(`${API_SERVER_URL}/addtocart/edit/${order_id}`,
-                formData
+            formData
         )
             .then((res) => {
                 if (res.status == 200) {
@@ -469,20 +497,45 @@ export const BackendProvider = ({ children }) => {
     }
 
 
-    const get_cart_from_buyer = async () => {
+    const get_cart_from_buyer = async (userid, isPurchased) => {
+        console.log(":", userid)
         if (!user) {
             alert("User id is null")
             return
         }
         axios.post(`${API_SERVER_URL}/addtocart/all/`, {
-            'buyer_id':user.userid
+            'buyer_id': userid,
+            'isPurchased': isPurchased
         })
-            .then((res) => {
+            .then(res => {
                 if (res.status == 200) {
-                    console.log('resdata:',res.data)
-                    setBuyerCart(res.data)
+                    console.log('resdata:', res.data)
+                    let smpar = []
+                    res.data.data.forEach(async (element,index) => {
+                        // console.log("pid:", element.product_id)
+                        let tmp = await axios.get(`${API_SERVER_URL}/product/${element.product_id}`)
+                        // console.log('p details:', tmp.data.data[0],res.data.data[0])
+                        tmp = tmp.data.data[0].fields
+                        smpar.push(JSON.parse(JSON.stringify({
+                            ...res.data.data[index],
+                            name:tmp.name,
+                            price:tmp.price,
+                            image:tmp.image
+                        })))
+                        // setCartDetails()
+                    });
+                    setCartDetails(smpar)
+                    console.log("\n\n\n\Smparvalue",smpar,smpar.length,"\n\n\n");
+                    // setBuyerCart(res.data.data)
+                }
+                else {
+                    console.log("nothing")
                 }
             })
+            .catch((error) => {
+                console.log('error:', error)
+            })
+        console.log('==========')
     }
 
     const showPopup = async (title, description) => {
@@ -503,16 +556,16 @@ export const BackendProvider = ({ children }) => {
             showPopup, titlePopUp, descPopUp, setOpenPopUp,
 
             // Backend
-            user, isSeller, isBuyer, isAuth,buyerCart,
+            user, isSeller, isBuyer, isAuth, buyerCart, product,
             login, signup, logout,
 
             //Product
             categories,
-            add_product,edit_product,
+            add_product, edit_product, get_product,
 
 
             //Cart
-            add_to_cart,edit_cart,get_cart_from_buyer,
+            add_to_cart, edit_cart, get_cart_from_buyer,cartDetails,
         }}>
             {children}
         </BackendContext.Provider>

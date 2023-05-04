@@ -28,6 +28,7 @@ class CartAdmin(admin.ModelAdmin):
     #fields = ('id','buyer_id','category','quantity','product_id','price')
     #fields = ('id','buyer_id','seller_id','product_name','product_id')
     fields = ('id','buyer_id','quantity','product_id','ispurchased')
+    # fields = ('id', 'buyer_id', 'quantity','product_id','product','name','ispurchased')
 
 admin.site.register(AddToCart, CartAdmin)
 
