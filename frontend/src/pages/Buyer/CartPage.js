@@ -40,18 +40,23 @@ const products = [
 
 function CartItem({ product, index }) {
   const { MEDIA_SERVER_URL, cartDetails, API_SERVER_URL } = useContext(BackendContext)
+  // But have to pass updated CartDetails, or make a new fetch to cart
+  // useEffect(() => {
+  //   Cart()
+  // }, [])
   const handleDelete = async (index) => {
     // console.log('index:',index)
     // console.log(cartDetails[index].name)
     axios.get(`${API_SERVER_URL}/addtocart/delete/${cartDetails[index].id}`)
       .then((res) => {
-        if (res.status = 200){
-          cartDetails.splice(index,1)
-          console.log('new cartdetaisl:',cartDetails)
+        if (res.status = 200) {
+          cartDetails.splice(index, 1)
+          console.log('new cartdetaisl:', cartDetails)
+          // Have to Re-render the page with new values
         }
         else
           alert("handle delete error")
-  
+
       })
   };
   return (
@@ -91,8 +96,8 @@ export default function Cart() {
   const { user, get_cart_from_buyer, cartDetails } = useContext(BackendContext)
   // console.log(user.id)
   useEffect(() => {
-    if(user.id !== ''){
-      get_cart_from_buyer(user.id,false)
+    if (user.id !== '') {
+      get_cart_from_buyer(user.id, false)
     }
   }, [user])
   console.log(cartDetails)
@@ -103,7 +108,7 @@ export default function Cart() {
         <div class="w-full md:w-3/4 bg-white px-10 py-10">
           <div class="flex justify-between border-b pb-8">
             <h1 class="font-semibold text-2xl">Shopping Cart</h1>
-            <h2 class="font-semibold text-2xl">{products.length+1} Items</h2>
+            <h2 class="font-semibold text-2xl">{products.length + 1} Items</h2>
           </div>
           <div class="flex mt-10 mb-5">
             <h3 class="font-semibold text-gray-600 text-xs uppercase w-2/5">Product Details</h3>
@@ -136,7 +141,7 @@ export default function Cart() {
         <div id="summary" class="hidden md:block w-1/4 px-8 py-10">
           <h1 class="font-semibold text-2xl border-b pb-8">Order Summary</h1>
           <div class="flex justify-between mt-10 mb-5">
-            <span class="font-semibold text-sm uppercase">Items {products.length+1}</span>
+            <span class="font-semibold text-sm uppercase">Items {products.length + 1}</span>
             <span class="font-semibold text-sm">₹{totalPrice}</span>
           </div>
           <div>
