@@ -19,7 +19,7 @@ const BackendContext = createContext({});
 const SERVER_URL = 'http://127.0.0.1:8000'
 // const SERVER_URL = 'http://ec2-34-209-215-94.us-west-2.compute.amazonaws.com:8000'
 const API_SERVER_URL = `${SERVER_URL}/api`
-const MEDIA_SERVER_URL = `${SERVER_URL}/media/`
+const MEDIA_SERVER_URL = `${SERVER_URL}`
 const DEFAULT_USER_INFO = {
     id: '',
     fullname: '',
@@ -509,7 +509,6 @@ export const BackendProvider = ({ children }) => {
             return
         }
         let smpar = []
-        let order_data;
         await axios.post(`${API_SERVER_URL}/addtocart/all/`, {
             'buyer_id': userid,
             'isPurchased': isPurchased
@@ -518,29 +517,23 @@ export const BackendProvider = ({ children }) => {
                 if (res.status == 200) {
                     console.log('resdata:', res.data)
                     res.data.data.forEach(async (element, index) => {
-                        console.log("pid:", element.product_id)
+                        // console.log("pid:", element.product_id)
                         let tmp = await axios.get(`${API_SERVER_URL}/product/${element.product_id}`)
                         // console.log('tmp:',tmp)
                         // console.log('p details:', tmp.data.data[0].fields.name)
-                        console.log('p details:', res.data.data[index])
+                        // console.log('p details:', res.data.data[index])
                         tmp = tmp.data.data[0].fields
-                        // smpar.push(JSON.parse(JSON.stringify({
-                        //     ...res.data.data[index],
-                        //     name:tmp.name,
-                        //     price:tmp.price,
-                        //     image:tmp.image
-                        // })))
                         smpar.push({
                             ...res.data.data[index],
                             name: tmp.name,
                             price: tmp.price,
-                            image: tmp.image
+                            image: '/media/'+tmp.image
                         })
-                        console.table('smpar:', smpar)
+                        // console.table('smpar:', smpar)
                     });
 
                     setTimeout(() => {
-                        console.log('final smpar:', smpar)
+                        // console.log('final smpar:', smpar)
                         setCartDetails(smpar)
                     }, 500);
 

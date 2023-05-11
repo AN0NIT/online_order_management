@@ -74,7 +74,7 @@ export default function Cart() {
 
   let totalPrice = 0.00;
   const { user, get_cart_from_buyer, cartDetails, MEDIA_SERVER_URL } = useContext(BackendContext)
-  console.log(user.id)
+  // console.log(user.id)
   useEffect(() => {
     if(user.id !== ''){
       get_cart_from_buyer(user.id,false)
