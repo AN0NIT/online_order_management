@@ -73,14 +73,14 @@ function CartItem({ product }) {
 export default function Cart() {
 
   let totalPrice = 0.00;
-  const { user, get_cart_from_buyer, cartDetails } = useContext(BackendContext)
+  const { user, get_cart_from_buyer, cartDetails, MEDIA_SERVER_URL } = useContext(BackendContext)
   console.log(user.id)
   useEffect(() => {
     if(user.id !== ''){
       get_cart_from_buyer(user.id,false)
     }
   }, [user])
-  console.log('carT',cartDetails.length)
+  
   // const products = cartDetails[0]
   return (
     <div class="mx-auto md:mx-auto md:w-2/3">
@@ -88,7 +88,7 @@ export default function Cart() {
         <div class="w-full md:w-3/4 bg-white px-10 py-10">
           <div class="flex justify-between border-b pb-8">
             <h1 class="font-semibold text-2xl">Shopping Cart</h1>
-            <h2 class="font-semibold text-2xl">{products.length} Items</h2>
+            <h2 class="font-semibold text-2xl">{products.length+1} Items</h2>
           </div>
           <div class="flex mt-10 mb-5">
             <h3 class="font-semibold text-gray-600 text-xs uppercase w-2/5">Product Details</h3>

@@ -8,7 +8,7 @@ import phoneimg from "../assets/phone.jpg"
 import BackendContext from "context/BackendContext";
 
 export default function ProductPage() {
-    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO, add_to_cart} = useContext(BackendContext)
+    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO, add_to_cart } = useContext(BackendContext)
     const [isBasePage, setBasePage] = useState(true)
     const [Products, setProducts] = useState([])
     const [Data, setData] = useState([])
@@ -42,8 +42,8 @@ export default function ProductPage() {
     }
 
     const addProduct = async (item) => {
-        await add_to_cart(item.pid,1);
-      }
+        await add_to_cart(item.pid, 1);
+    }
     useEffect(() => {
         loadData()
     }, [])
@@ -373,31 +373,33 @@ export default function ProductPage() {
                         {Data.map((item) => {
                             if (category === item.category)
                                 return (
-                                    <div class="mt-2 grid grid-cols-1 gap-y-10 gap-x-2 sm:grid-cols-2 lg:grid-cols-1 xl:gap-x-2">
-                                        <div class="group relative">
-                                            {/* <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"> */}
-                                            <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
-                                                <img src={`${MEDIA_SERVER_URL}${item.img}`} alt="Front of men&#039;s Basic Tee in black." class="w-full h-full object-center object-cover lg:w-full lg:h-full" />
-                                            </div>
-                                            <div class="mt-4 flex justify-between">
-                                                <div>
-                                                    <h3 class="text-sm text-gray-700">
-                                                        <a href="#">
-                                                            <span aria-hidden="true" class="absolute inset-0"></span>
-                                                            {item.name}
-                                                        </a>
-                                                    </h3>
-                                                    <p class="mt-1 text-sm text-gray-500">{item.category}</p>
+                                    <>
+                                        <div class="mt-2 grid grid-cols-1 gap-y-10 gap-x-2 sm:grid-cols-2 lg:grid-cols-1 xl:gap-x-2">
+                                            <div class="group relative">
+                                                {/* <div class="mt-6 grid grid-cols-1 gap-y-10 gap-x-6 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8"> */}
+                                                <div class="w-full min-h-80 bg-gray-200 aspect-w-1 aspect-h-1 rounded-md overflow-hidden group-hover:opacity-75 lg:h-80 lg:aspect-none">
+                                                    <img src={`${MEDIA_SERVER_URL}${item.img}`} alt="Front of men&#039;s Basic Tee in black." class="w-full h-full object-center object-cover lg:w-full lg:h-full" />
                                                 </div>
-                                                <p class="text-sm font-medium text-gray-900">Rs {item.price}</p>
-                                            </div>
-                                            <div>
-                                                <button onClick={addProduct(item)} style={{float:"right", background: "red"}}> Add</button>
+                                                <div class="mt-4 flex justify-between">
+                                                    <div>
+                                                        <h3 class="text-sm text-gray-700">
+                                                            <a href="#">
+                                                                <span aria-hidden="true" class=" inset-0"></span>
+                                                                {item.name}
+                                                            </a>
+                                                        </h3>
+                                                        <p class="mt-1 text-sm text-gray-500">{item.category}</p>
+                                                    </div>
+                                                    <p class="text-sm font-medium text-gray-900">Rs {item.price}</p>
+                                                </div>
+                                                <button class='m-4 w-1/9 p-4 bg-red-600 rounded-md text-red-300 font-semibold '
+                                            onClick={() => addProduct(item)}> Add </button>
                                             </div>
                                         </div>
-                                    </div>
-
+                                        
+                                    </>
                                 )
+
                         })}
                         {/* ---- */}
                     </div>

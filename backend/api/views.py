@@ -278,7 +278,7 @@ def add_cart_item(request):
     buyer_id = request.data['buyer_id']
     quantity = int(request.data['quantity'])
     product_id = request.data['product_id']
-
+    print("quantity:",quantity)
     if (quantity <= 0):
         return Response('INVALID_QUANTITY')
 
@@ -291,14 +291,21 @@ def add_cart_item(request):
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
     elif(product.quantity < quantity):
         return Response('INVALID_QUANTITY')
-
-    datas = AddToCart.objects.create(
+    try:
+        cartProduct = AddToCart.objects.get(buyer_id=buyer_id,product_id=product_id)
+        cartProduct.quantity += quantity
+        cartProduct.save()
+        print('CART_EDITED_SUCCESSFULLY')
+        return Response('CART_EDITED_SUCCESSFULLY')
+    except:
+        datas = AddToCart.objects.create(
         buyer_id = buyer,
         quantity = quantity,
         product_id = product
-    )
-    #product.quantity = product.quantity - quantity
-    return Response('ADDED_TO_CART')
+        )
+        #product.quantity = product.quantity - quantity
+        print('ADDED_TO_CART')
+        return Response('ADDED_TO_CART')
 
 
 
@@ -318,7 +325,7 @@ def edit_cart_item(request, order_id):
         return Response('SOMETHING_WENT_WRONG')
     elif( quantity > cartProduct.product_id.quantity):
         return Response('INVALID_QUANTITY')
-    cartProduct.quantity = quantity
+    cartProduct.quantity += quantity
     cartProduct.save()
     return Response('CART_EDITED_SUCCESSFULLY')
 
