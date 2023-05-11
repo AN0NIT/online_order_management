@@ -32,12 +32,23 @@ const products = [
   // More products...
 ]
 
+const handleDelete = async (index) => {
+  console.log('index:',index)
+  // axios.get(`${API_SERVER_URL}/addtocart/delete/${order_id}`)
+  //   .then((res) => {
+  //     if (res.status = 200)
+  //       Cart()
+  //     else
+  //       alert("handle delete error")
+
+  //   })
+};
 
 
 
 
 
-function CartItem({ product }) {
+function CartItem({ product, index }) {
   const { MEDIA_SERVER_URL } = useContext(BackendContext)
   return (
     <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
@@ -48,7 +59,7 @@ function CartItem({ product }) {
         <div class="flex flex-col justify-between ml-4 flex-grow">
           <span class="font-bold text-sm">{product.name}</span>
           {/* <span class="text-red-500 text-xs">{product.href}</span> */}
-          <a href="#" class="font-semibold hover:text-red-500 text-gray-500 text-xs">Remove</a>
+          <a onClick={() => handleDelete(index)} class="font-semibold hover:text-red-500 text-gray-500 text-xs">Remove</a>
         </div>
       </div>
       <div class="flex justify-center w-1/5">
@@ -73,14 +84,14 @@ function CartItem({ product }) {
 export default function Cart() {
 
   let totalPrice = 0.00;
-  const { user, get_cart_from_buyer, cartDetails, MEDIA_SERVER_URL } = useContext(BackendContext)
+  const { user, get_cart_from_buyer, cartDetails } = useContext(BackendContext)
   // console.log(user.id)
   useEffect(() => {
     if(user.id !== ''){
       get_cart_from_buyer(user.id,false)
     }
   }, [user])
-  
+  console.log(cartDetails)
   // const products = cartDetails[0]
   return (
     <div class="mx-auto md:mx-auto md:w-2/3">
@@ -100,7 +111,7 @@ export default function Cart() {
           {
             cartDetails && cartDetails.map((product, i) => {
               totalPrice += product.price * product.quantity
-              return (<CartItem product={product} />);
+              return (<CartItem product={product} index={i} />);
             })
           }
           <div class="md:hidden border-t mt-8">
