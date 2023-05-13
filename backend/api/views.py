@@ -284,6 +284,7 @@ def add_cart_item(request):
     if (quantity <= 0):
         return Response('INVALID_QUANTITY')
     try:
+        # if(1):
         print("buy-->")
         buyer = User.objects.get(id=buyer_id)
         if (buyer is None):
@@ -298,16 +299,12 @@ def add_cart_item(request):
         if (seller is None):
             return api_model_response(ApiResponseMessageType.USER_INVALID)
         cartProduct = AddToCart.objects.get(buyer_id=buyer_id,product_id=product_id,ispurchased=False)
-        print(':::::',dir(cartProduct))
-        if(AddToCart.objects.get(buyer_id=buyer_id,product_id=product_id)):
-            # print('leng:',len(cartProduct.values()))
-            cartProduct.seller_id = seller
-            cartProduct.quantity += quantity
-            cartProduct.save()
-            print('CART_EDITED_SUCCESSFULLY')
-            return Response('CART_EDITED_SUCCESSFULLY')
-        else:
-            print('error:')
+        # print(':::::',dir(cartProduct),'\n\n\n\n',cartProduct,'\n\n\n\n\n')
+        cartProduct.seller_id = seller
+        cartProduct.quantity += quantity
+        cartProduct.save()
+        print('CART_EDITED_SUCCESSFULLY')
+        return Response('CART_EDITED_SUCCESSFULLY')
         
     except User.DoesNotExist as error:
         print(error)
