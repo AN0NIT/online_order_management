@@ -11,16 +11,16 @@ import { useState, useContext, useEffect } from 'react'
 export default function SellerUserList() {
   // const [data, setData] = useState(userRows);
   const [data, setData] = useState([]);
-  const { API_SERVER_URL, MEDIA_SERVER_URL,COOKIE_USER_INFO } = useContext(BackendContext)
+  const { user,API_SERVER_URL, MEDIA_SERVER_URL,COOKIE_USER_INFO } = useContext(BackendContext)
   const [products, setProducts] = useState([])
-  const user = localStorage.getItem(COOKIE_USER_INFO)
-  const userdata = JSON.parse(user)
+  const userdata = JSON.parse(localStorage.getItem(COOKIE_USER_INFO))
   
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
   };
   
   console.log('userdata:',userdata)
+  console.log('userid:',user.id)
   const loadData = async () => {
     let tmp = []
     await axios.post(`${API_SERVER_URL}/addtocart/orders/`, { 
@@ -32,15 +32,16 @@ export default function SellerUserList() {
           // convert product to data format accecpted by this template
           const stuff = res.data.data;
           for (let i = 0; i < stuff.length; i++) {
-            const product = stuff[i]
+            const order = stuff[i]
             tmp.push({
               id: i,
-              pid: product.id,
-              name: product.name,
-              img: product.image,
-              stock: product.quantity,
-              status: product.status == 1 ? "active" : "inactive",
-              price: product.price,
+              orderid: order.id,
+              pid: order.id,
+              name: order.name,
+              img: order.image,
+              stock: order.quantity,
+              status: order.status == 1 ? "active" : "inactive",
+              price: order.price,
             })
           }
           setData(tmp)

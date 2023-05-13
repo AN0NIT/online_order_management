@@ -11,10 +11,9 @@ import BackendContext from "context/BackendContext";
 
 
 export default function SellerProductList() {
-  const { API_SERVER_URL, MEDIA_SERVER_URL,COOKIE_USER_INFO } = useContext(BackendContext)
+  const { user,API_SERVER_URL, MEDIA_SERVER_URL,COOKIE_USER_INFO } = useContext(BackendContext)
   const [products, setProducts] = useState([])
-  const user = localStorage.getItem(COOKIE_USER_INFO)
-  const userdata = JSON.parse(user)
+  const userdata = JSON.parse(localStorage.getItem(COOKIE_USER_INFO))
   const [data, setData] = useState([]);
 
   // console.log(user)
@@ -23,7 +22,7 @@ export default function SellerProductList() {
 
   const loadData = async () => {
     let tmp = []
-    await axios.post(`${API_SERVER_URL}/user/product/all/`, { username: userdata.username })
+    await axios.post(`${API_SERVER_URL}/user/product/all/`, { seller_id: user.id })
       .then((res) => {
         if (res.status == 200) {
           setProducts(res.data)
