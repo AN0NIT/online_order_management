@@ -15,6 +15,8 @@ import SellerUserList from "pages/Seller/pages/userList/UserList";
 import SellerProduct from "pages/Seller/pages/product/Product";
 import SellerNewProduct from "pages/Seller/pages/newProduct/NewProduct";
 import SellerProductList from "pages/Seller/pages/productList/ProductList";
+import SellerOrderList from "pages/Seller/pages/orderList/orderList";
+import SellerOrder from "pages/Seller/pages/order/order";
 
 import UserRoute from 'utils/UserRoute.js';
 import ProductPage from 'pages/ProductPage'
@@ -48,6 +50,8 @@ function App() {
 					<Route path="/seller/newUser" element={<SellerNewUser />} />
 					<Route path="/seller/product/:productId" element={<SellerProduct />} />
 					<Route path="/seller/newproduct" element={<SellerNewProduct />} />
+					<Route path='/seller/orders' element={<SellerOrderList />} />
+					<Route path="/seller/order/:orderId" element={<SellerOrder />} />
 
 					<Route path="/seller/product/add" element={<NewProduct />} />
 				</Routes>
