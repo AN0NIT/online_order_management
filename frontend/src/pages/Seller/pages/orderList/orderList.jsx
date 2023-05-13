@@ -36,12 +36,11 @@ export default function SellerUserList() {
             tmp.push({
               id: i,
               orderid: order.id,
-              pid: order.id,
-              name: order.name,
-              img: order.image,
-              stock: order.quantity,
-              status: order.status == 1 ? "active" : "inactive",
-              price: order.price,
+              pid: order.product_id,
+              seller_id: order.seller_id,
+              buyer_id: order.buyer_id,
+              quantity: order.quantity,
+              ispurchased: order.ispurchased
             })
           }
           setData(tmp)
@@ -58,19 +57,19 @@ export default function SellerUserList() {
   const columns = [
     { field: "id", headerName: "ID", width: 90 },
     {
-      field: "user",
-      headerName: "User",
+      field: "orderid",
+      headerName: "Order",
       width: 200,
       renderCell: (params) => {
         return (
           <div className="userListUser">
             <img className="userListImg" src={params.row.avatar} alt="" />
-            {params.row.username}
+            {params.row.orderid}
           </div>
         );
       },
     },
-    { field: "email", headerName: "Email", width: 200 },
+    { field: "product", headerName: "Product", width: 200 },
     {
       field: "status",
       headerName: "Status",
