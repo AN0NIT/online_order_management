@@ -395,25 +395,28 @@ def get_cart_from_a_buyer(request):
 def get_cart_from_a_seller(request):
     seller_id = request.data['seller_id']
     print('\n\n\n\nseller_id:',seller_id,type(seller_id))
-    seller = User.objects.get(id=seller_id)
-    if (seller is None):
+    try:
+        seller = User.objects.get(id=seller_id)
+        if (seller is None):
+            return api_model_response(ApiResponseMessageType.USER_INVALID)
+        # cartProducts = AddToCart.objects.all().filter(buyer_id=buyer_id,ispurchased=ispurchased)
+        cartProducts = AddToCart.objects.select_related('product_id').filter(seller_id=seller_id,ispurchased=True)
+        # cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased).values('id', 'buyer_id', 'quantity', 'product_id', 'ispurchased',  'product_id__name', 'product_id__price', 'product_id__image')
+        if not cartProducts:
+            return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
+        serializer = CartSerializer(cartProducts, many=True)
+        return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
+
+    except User.DoesNotExist as error:
+        print(error)
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    # cartProducts = AddToCart.objects.all().filter(buyer_id=buyer_id,ispurchased=ispurchased)
-    cartProducts = AddToCart.objects.select_related('product_id').filter(seller_id=seller_id,ispurchased=True)
-    # cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased).values('id', 'buyer_id', 'quantity', 'product_id', 'ispurchased',  'product_id__name', 'product_id__price', 'product_id__image')
-    if not cartProducts:
+
+    except AddToCart.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
-    # print('\n\n\n\n',dir(cartProducts),len(cartProducts.values()),'\n\n\n\n')
-    # values = cartProducts.values()[0]
-    values = []
-    for i in range(len(cartProducts.values())):
-        values.append(cartProducts.values()[i])
-    # print("::",values['id'],"::")
-    # print("::",values['id'],values['quantity'],"::")
-
-    serializer = CartSerializer(cartProducts, many=True)
-    return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
-
+        
+    except Exception as error:
+        print("new error:",error)
+        return Response(f'{error}')
 
 
 @api_view(['POST'])
