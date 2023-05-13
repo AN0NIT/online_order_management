@@ -31,8 +31,8 @@ urlpatterns = [
     path('api/addtocart/delete/<uuid:order_id>', views.delete_cart_item, name='delete_from_cart'),
     path('api/addtocart/all/', views.get_cart_from_a_buyer,
          name='get_cart_from_a_buyer'),
-    
-    
+    path('api/addtocart/orders/', views.get_cart_from_a_seller,
+         name='get_cart_from_a_seller'),
     
     # ml
     path('api/product/category/stock/recommendation', views.get_stock_recommendation,

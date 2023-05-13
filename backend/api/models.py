@@ -88,7 +88,7 @@ class AddToCart(models.Model):
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     #buyer_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    #seller_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    seller_id = models.ForeignKey(User, on_delete=models.CASCADE,related_name='sellers_page',null=True)
     buyer_id =  models.ForeignKey(User, on_delete=models.CASCADE,related_name='buyer_cart')
     quantity = models.PositiveBigIntegerField(default=1)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE) 
