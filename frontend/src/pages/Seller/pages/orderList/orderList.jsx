@@ -11,72 +11,120 @@ import { useState, useContext, useEffect } from 'react'
 export default function SellerUserList() {
   // const [data, setData] = useState(userRows);
   const [data, setData] = useState([]);
-  const { user,API_SERVER_URL, MEDIA_SERVER_URL,COOKIE_USER_INFO } = useContext(BackendContext)
+  const { user, API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO } = useContext(BackendContext)
   const [products, setProducts] = useState([])
   const userdata = JSON.parse(localStorage.getItem(COOKIE_USER_INFO))
-  
+
   const handleDelete = (id) => {
     setData(data.filter((item) => item.id !== id));
   };
-  
-  console.log('userdata:',userdata)
-  console.log('userid:',user.id)
+
+  console.log('userdata:', userdata)
+  console.log('userid:', user.id)
+  // const loadData = async () => {
+  //   let tmp = []
+  //   await axios.post(`${API_SERVER_URL}/addtocart/orders/`, { 
+  //     'seller_id': user.id,
+  //   })
+  //     .then((res) => {
+  //       if (res.status == 200) {
+  //         setProducts(res.data)
+  //         // convert product to data format accecpted by this template
+  //         const stuff = res.data.data;
+  //         for (let i = 0; i < stuff.length; i++) {
+  //           const order = stuff[i]
+  //           tmp.push({
+  //             id: i,
+  //             orderid: order.id,
+  //             pid: order.product_id,
+  //             seller_id: order.seller_id,
+  //             buyer_id: order.buyer_id,
+  //             quantity: order.quantity,
+  //             ispurchased: order.ispurchased == true ? "new order" : "delivered"
+  //           })
+  //         }
+  //         setData(tmp)
+  //       }
+  //     })
+  // }
+
   const loadData = async () => {
-    let tmp = []
-    await axios.post(`${API_SERVER_URL}/addtocart/orders/`, { 
+    let smpar = []
+    await axios.post(`${API_SERVER_URL}/addtocart/orders/`, {
       'seller_id': user.id,
     })
-      .then((res) => {
+      .then(res => {
         if (res.status == 200) {
-          setProducts(res.data)
-          // convert product to data format accecpted by this template
-          const stuff = res.data.data;
-          for (let i = 0; i < stuff.length; i++) {
-            const order = stuff[i]
-            tmp.push({
-              id: i,
-              orderid: order.id,
-              pid: order.product_id,
-              seller_id: order.seller_id,
-              buyer_id: order.buyer_id,
-              quantity: order.quantity,
-              ispurchased: order.ispurchased
+          console.log('resdata:', res.data)
+          res.data.data.forEach(async (element, index) => {
+            // console.log("pid:", element.product_id)
+            let tmp = await axios.get(`${API_SERVER_URL}/product/${element.product_id}`)
+            // console.log('tmp:',tmp)
+            // console.log('p details:', tmp.data.data[0].fields.name)
+            // console.log('p details:', res.data.data[index])
+            tmp = tmp.data.data[0].fields
+            smpar.push({
+              ...res.data.data[index],
+              name: tmp.name,
+              price: tmp.price,
+              image: '/media/' + tmp.image,
+              transactionvol: tmp.price * element.quantity,
+              // status: res.data.data[index].issold == true ? "sold" : "sell"
+              status: res.data.data[index].ispurchased == true ? "sell" : "sold" 
             })
-          }
-          setData(tmp)
+            // console.table('smpar:', smpar)
+          });
+
+          setTimeout(() => {
+            console.log('final smpar:', smpar)
+            setData(smpar)
+          }, 500);
+
+        }
+        else {
+          console.log("nothing")
+          return
         }
       })
+      .catch((error) => {
+        console.log('error:', error)
+      })
+
+
   }
 
   useEffect(() => {
     loadData()
   }, [])
 
-
+  console.log('data:', data)
 
   const columns = [
-    { field: "id", headerName: "ID", width: 90 },
+    // { field: "id", headerName: "ID", width: 100 },
     {
-      field: "orderid",
+      field: "id",
       headerName: "Order",
-      width: 200,
+      width: 300
+    },
+    {
+      field: "product", headerName: "Product", width: 200 ,
       renderCell: (params) => {
         return (
           <div className="userListUser">
-            <img className="userListImg" src={params.row.avatar} alt="" />
-            {params.row.orderid}
+            <img className="userListImg" src={`${MEDIA_SERVER_URL}${params.row.image}`} alt="" />
+            {params.row.name}
           </div>
         );
       },
+
     },
-    { field: "product", headerName: "Product", width: 200 },
     {
       field: "status",
       headerName: "Status",
       width: 120,
     },
     {
-      field: "transaction",
+      field: "transactionvol",
       headerName: "Transaction Volume",
       width: 160,
     },
@@ -88,7 +136,7 @@ export default function SellerUserList() {
         return (
           <>
             <Link to={"/seller/order/" + params.row.id}>
-              <button className="userListEdit">Edit</button>
+              <button className="userListEdit">Sell</button>
             </Link>
             <DeleteOutline
               className="userListDelete"
