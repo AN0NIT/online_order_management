@@ -25,4 +25,4 @@ class CartSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = AddToCart
-        fields = ('id', 'buyer_id', 'seller_id','quantity', 'product_id', 'product_data', 'ispurchased') 
+        fields = ('id', 'buyer_id', 'seller_id','quantity', 'product_id', 'product_data', 'ispurchased','issold') 

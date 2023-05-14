@@ -14,6 +14,7 @@ import { useLocation } from 'react-router-dom';
 export default function Product(props) {
     const location = useLocation();
     const params = location.state;
+    console.log('params:',params)
     const [updateData, setUpdateData] = useState({name:params.name, price:params.price, quantity:params.stock, status:params.status == "active" ? 1 : 0});
     const [imageContent, setImageContent] = useState(null);
     const { edit_product, MEDIA_SERVER_URL } = useContext(BackendContext)

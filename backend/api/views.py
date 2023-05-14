@@ -152,6 +152,24 @@ def signup(request):
     return api_model_response(ApiResponseMessageType.SIGNUP_SUCCESSFULL, user)
 
 
+@api_view(['GET'])
+def get_user(request, id):
+    try:
+        user_data = User.objects.get(id=id)
+        # print('userdata:',dir(user_data))
+        # print(user_data.dob)
+        # print(user_data.username)
+        # print(user_data.email)
+        data = {"username":f"{user_data.username}", 
+                "email":f"{user_data.email}",
+                "dob":f"{user_data.dob}"
+                }
+        return Response(data)
+    except User.DoesNotExist as error:
+        print(error)
+        return api_model_response(ApiResponseMessageType.USER_INVALID)
+
+
 @api_view(['POST'])
 def delete_user(request):
     data = request.data
@@ -365,9 +383,28 @@ def buy_cart_item(request, order_id):
     cartProduct = AddToCart.objects.get(id=order_id)
     if (cartProduct is None):
         return Response('SOMETHING_WENT_WRONG')
-    cartProduct.isPurchased = True
+    cartProduct.ispurchased = True
     cartProduct.save()
-    return Response('ORDER_PLACED_SUCCESFULLY')
+    return Response('ORDER_PLACED_SUCCESSFULLY')
+
+@api_view(['GET'])
+def sell_cart_item(request, order_id):
+    try:
+        cartProduct = AddToCart.objects.get(id=order_id)
+        if (cartProduct is None):
+            return Response('SOMETHING_WENT_WRONG')
+        cartProduct.issold = True
+        product = Product.objects.get(id=cartProduct.product_id.id)
+        print("old quan:",product.quantity)
+        product.quantity -= cartProduct.quantity
+        print("new quantity:",product.quantity)
+        product.save()
+        cartProduct.save()
+        return Response('ORDER_EXECUTED_SUCCESSFULLY')
+    except AddToCart.DoesNotExist:
+        return Response('CART_NOT_FOUND')
+    except Product.DoesNotExist:
+        return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
 
 @api_view(['POST'])
 def get_cart_from_a_buyer(request):
@@ -397,7 +434,7 @@ def get_cart_from_a_seller(request):
         if (seller is None):
             return api_model_response(ApiResponseMessageType.USER_INVALID)
         # cartProducts = AddToCart.objects.all().filter(buyer_id=buyer_id,ispurchased=ispurchased)
-        cartProducts = AddToCart.objects.select_related('product_id').filter(seller_id=seller_id,ispurchased=True)
+        cartProducts = AddToCart.objects.select_related('product_id').filter(seller_id=seller_id,ispurchased=True,issold=False)
         # cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased).values('id', 'buyer_id', 'quantity', 'product_id', 'ispurchased',  'product_id__name', 'product_id__price', 'product_id__image')
         if not cartProducts:
             return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)

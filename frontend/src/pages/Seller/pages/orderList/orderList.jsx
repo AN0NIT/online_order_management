@@ -56,6 +56,9 @@ export default function SellerUserList() {
       .then(res => {
         if (res.status == 200) {
           console.log('resdata:', res.data)
+          console.log('res:',res)
+          if(res.data === "NO_PRODUCTS_FROM_USER")
+            return
           res.data.data.forEach(async (element, index) => {
             // console.log("pid:", element.product_id)
             let tmp = await axios.get(`${API_SERVER_URL}/product/${element.product_id}`)
@@ -67,6 +70,7 @@ export default function SellerUserList() {
               ...res.data.data[index],
               name: tmp.name,
               price: tmp.price,
+              availablestock: tmp.quantity,
               image: '/media/' + tmp.image,
               transactionvol: tmp.price * element.quantity,
               // status: res.data.data[index].issold == true ? "sold" : "sell"
@@ -89,8 +93,6 @@ export default function SellerUserList() {
       .catch((error) => {
         console.log('error:', error)
       })
-
-
   }
 
   useEffect(() => {
@@ -135,7 +137,7 @@ export default function SellerUserList() {
       renderCell: (params) => {
         return (
           <>
-            <Link to={"/seller/order/" + params.row.id}>
+            <Link to={"/seller/order/" + params.row.id} state={params.row}>
               <button className="userListEdit">Sell</button>
             </Link>
             <DeleteOutline
