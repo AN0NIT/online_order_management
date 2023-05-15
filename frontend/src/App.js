@@ -7,6 +7,7 @@ import Signup from 'pages/SignupPage'
 
 import BuyerCart from 'pages/Buyer/CartPage'
 import BuyerUser from 'pages/Buyer/UserPage.js'
+import BuyerOrders from 'pages/Buyer/OrderPage'
 
 import SellerDashboard from 'pages/Seller/pages/home/Home'
 import SellerUser from "pages/Seller/pages/user/User";
@@ -41,6 +42,7 @@ function App() {
 
 					<Route path="/buyer/cart" element={<BuyerCart />} />
 					<Route path="/buyer/user" element={<BuyerUser />} />
+					<Route path="/buyer/orders" element={<BuyerOrders />} />
 
 					<Route path='/seller/about' element={<SellerDashboard />} />
 					<Route path='/seller/users' element={<SellerUserList />} />

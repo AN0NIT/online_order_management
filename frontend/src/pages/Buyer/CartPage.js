@@ -39,7 +39,7 @@ const products = [
 
 
 function CartItem({ product, index }) {
-  const { MEDIA_SERVER_URL, cartDetails, API_SERVER_URL } = useContext(BackendContext)
+  const { MEDIA_SERVER_URL, cartDetails, setCartDetails, API_SERVER_URL } = useContext(BackendContext)
   // But have to pass updated CartDetails, or make a new fetch to cart
   // useEffect(() => {
   //   Cart()
@@ -47,17 +47,15 @@ function CartItem({ product, index }) {
   const handleDelete = async (index) => {
     // console.log('index:',index)
     // console.log(cartDetails[index].name)
-    axios.get(`${API_SERVER_URL}/addtocart/delete/${cartDetails[index].id}`)
-      .then((res) => {
-        if (res.status = 200) {
-          cartDetails.splice(index, 1)
-          console.log('new cartdetaisl:', cartDetails)
-          // Have to Re-render the page with new values
-        }
-        else
-          alert("handle delete error")
 
-      })
+    const response = await axios.get(`${API_SERVER_URL}/addtocart/delete/${cartDetails[index].id}`)
+    console.log('respobse is:', response);
+    var temp_cart = [...cartDetails]
+    console.log('deleted:', cartDetails[index])
+    console.log('cartDetails:', cartDetails);
+    temp_cart.splice(index, 1)
+    console.log('new cartdetaisl:', temp_cart)
+    setCartDetails(temp_cart)
   };
   return (
     <div class="flex items-center hover:bg-gray-100 -mx-8 px-6 py-5">
@@ -93,14 +91,33 @@ function CartItem({ product, index }) {
 export default function Cart() {
 
   let totalPrice = 0.00;
-  const { user, get_cart_from_buyer, cartDetails } = useContext(BackendContext)
-  // console.log(user.id)
+  const { user, get_cart_from_buyer, cartDetails, API_SERVER_URL } = useContext(BackendContext)
+  
+  console.log('userid:', user.id)
   useEffect(() => {
     if (user.id !== '') {
-      get_cart_from_buyer(user.id, false)
+        get_cart_from_buyer(user.id, false)
     }
   }, [user])
-  console.log(cartDetails)
+
+  const handleCheckout = async () => {
+    if (cartDetails.length < 1)
+      alert("NO_PRODUCTS_FOUND")
+    else {
+      cartDetails.forEach(async (element, index) => {
+        console.log('order_id:', element.id, '\nindex:', index)
+        let tmp = await axios.post(`${API_SERVER_URL}/addtocart/buy/`,
+        { buyer_id: user.id,
+          order_id: element.id
+        })
+
+        console.log('checkout res:',tmp)
+      })
+    }
+  }
+
+
+  console.log('old cartdetails:', cartDetails)
   // const products = cartDetails[0]
   return (
     <div class="mx-auto md:mx-auto md:w-2/3">
@@ -108,7 +125,7 @@ export default function Cart() {
         <div class="w-full md:w-3/4 bg-white px-10 py-10">
           <div class="flex justify-between border-b pb-8">
             <h1 class="font-semibold text-2xl">Shopping Cart</h1>
-            <h2 class="font-semibold text-2xl">{products.length + 1} Items</h2>
+            <h2 class="font-semibold text-2xl">{cartDetails.length} Items</h2>
           </div>
           <div class="flex mt-10 mb-5">
             <h3 class="font-semibold text-gray-600 text-xs uppercase w-2/5">Product Details</h3>
@@ -118,7 +135,7 @@ export default function Cart() {
           </div>
 
           {
-            cartDetails && cartDetails.map((product, i) => {
+            cartDetails.length > 0 && cartDetails.map((product, i) => {
               totalPrice += product.price * product.quantity
               return (<CartItem product={product} index={i} />);
             })
@@ -141,7 +158,7 @@ export default function Cart() {
         <div id="summary" class="hidden md:block w-1/4 px-8 py-10">
           <h1 class="font-semibold text-2xl border-b pb-8">Order Summary</h1>
           <div class="flex justify-between mt-10 mb-5">
-            <span class="font-semibold text-sm uppercase">Items {products.length + 1}</span>
+            <span class="font-semibold text-sm uppercase">Items {cartDetails.length}</span>
             <span class="font-semibold text-sm">₹{totalPrice}</span>
           </div>
           <div>
@@ -160,7 +177,7 @@ export default function Cart() {
               <span>Total cost</span>
               <span>₹{totalPrice + 10.00}</span>
             </div>
-            <button class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
+            <button onClick={handleCheckout} class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
           </div>
         </div>
 

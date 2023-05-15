@@ -112,6 +112,7 @@ export const BackendProvider = ({ children }) => {
     // Carts
     const [buyerCart, setBuyerCart] = useState([])
     const [cartDetails, setCartDetails] = useState([])
+     const [orderDetails, setOrderDetails] = useState([])
 
     useEffect(() => {
 
@@ -534,7 +535,10 @@ export const BackendProvider = ({ children }) => {
 
                     setTimeout(() => {
                         // console.log('final smpar:', smpar)
-                        setCartDetails(smpar)
+                        if(!isPurchased)
+                            setCartDetails(smpar)
+                        else
+                            setOrderDetails(smpar)
                     }, 500);
 
                 }
@@ -576,7 +580,7 @@ export const BackendProvider = ({ children }) => {
 
 
             //Cart
-            add_to_cart, edit_cart, get_cart_from_buyer, cartDetails,
+            add_to_cart, edit_cart, get_cart_from_buyer, cartDetails,orderDetails,setCartDetails,
         }}>
             {children}
         </BackendContext.Provider>

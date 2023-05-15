@@ -11,7 +11,7 @@ import CartPopup from 'pages/Buyer/CartPage'
 
 const buyerNavigation = [
   { name: 'More', href: '/product', current: false },
-  { name: 'Orders', href: '#', current: false },
+  { name: 'Orders', href: '/buyer/orders', current: false },
 ]
 const sellerNavigation = [
   { name: 'Your Profile', href: '/seller/about' },

@@ -1,0 +1,16 @@
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #f6f4f7;
+    
+    /* Chrome 10-25, Safari 5.1-6 */
+    /* background: -webkit-linear-gradient(to top left, #273986); */
+    
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /* background: linear-gradient(to top left, rgba(205, 156, 242, 1), rgba(246, 243, 255, 1)) */
+    }
+
+    .progress {
+    width: 45%!important;
+    height: 5px;
+    background-color: #042baa;
+}

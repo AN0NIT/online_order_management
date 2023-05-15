@@ -64,8 +64,9 @@ class ApiResponseMessageType(Enum):
 
     PRODUCT_FOUND = 11
     NO_PRODUCT_FOUND = 12
-    PRODUCT_AVAILABLE_CATEGORIES = 13
-    ALL_PRODUCTS_FROM_USER = 14
+    NO_PRODUCTS_FROM_USER = 13
+    PRODUCT_AVAILABLE_CATEGORIES = 14
+    ALL_PRODUCTS_FROM_USER = 15
     PRODUCT_ADDED_SUCCESSFULLY = 20
     PRODUCT_DELETED_SUCCESSFULLY = 21
 
@@ -374,9 +375,10 @@ def delete_cart_item(request, order_id):
 
 
 @api_view(['POST'])
-def buy_cart_item(request, order_id):
+def buy_cart_item(request):
     data = request.data
     buyer_id = request.data['buyer_id']
+    order_id = request.data['order_id']
     buyer = User.objects.get(id=buyer_id)
     if( buyer is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
@@ -408,21 +410,29 @@ def sell_cart_item(request, order_id):
 
 @api_view(['POST'])
 def get_cart_from_a_buyer(request):
-    buyer_id = request.data['buyer_id']
-    ispurchased = request.data['isPurchased']
-    print('\n\n\n\nbuyer_id:',buyer_id,type(buyer_id))
-    print('\n\n\n\n',ispurchased,type(ispurchased))
-    buyer = User.objects.get(id=buyer_id)
-    if (buyer is None):
-        return api_model_response(ApiResponseMessageType.USER_INVALID)
-    # cartProducts = AddToCart.objects.all().filter(buyer_id=buyer_id,ispurchased=ispurchased)
-    cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased)
-    # cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased).values('id', 'buyer_id', 'quantity', 'product_id', 'ispurchased',  'product_id__name', 'product_id__price', 'product_id__image')
-    if not cartProducts:
-        return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
-    print('\n\n\n\n',cartProducts,'\n\n\n\n')
-    serializer = CartSerializer(cartProducts, many=True)
-    return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
+    # try:
+    if(1):
+        buyer_id = request.data['buyer_id']
+        ispurchased = request.data['isPurchased']
+        print('\n\n\n\nbuyer_id:',buyer_id,type(buyer_id))
+        print('\n\n\n\n',ispurchased,type(ispurchased))
+        buyer = User.objects.get(id=buyer_id)
+        if (buyer is None):
+            return api_model_response(ApiResponseMessageType.USER_INVALID)
+        # cartProducts = AddToCart.objects.all().filter(buyer_id=buyer_id,ispurchased=ispurchased)
+        cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased)
+        # cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased).values('id', 'buyer_id', 'quantity', 'product_id', 'ispurchased',  'product_id__name', 'product_id__price', 'product_id__image')
+        if not cartProducts:
+            return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
+        print('\n\n\n\n',cartProducts,'\n\n\n\n')
+        serializer = CartSerializer(cartProducts, many=True)
+        return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
+    # except User.DoesNotExist as error:
+    #     print(error)
+    #     return api_model_response(ApiResponseMessageType.USER_INVALID)
+
+    # except AddToCart.DoesNotExist:
+    #     return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
 
 
 @api_view(['POST'])
