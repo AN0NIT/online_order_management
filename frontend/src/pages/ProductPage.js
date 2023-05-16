@@ -165,7 +165,7 @@ export default function ProductPage() {
                                 {category.length === 0 ? Data.map((item,) => {
                                     return (
                                         <li key={item.id} className="col-span-full sm:col-span-2 lg:col-span-1 group shadow rounded border border-gray-200 hover:shadow-md">
-                                            <a href="" className="flex flex-col">
+                                            <a href="" className="flex flex-col justify-between" style={{height:"100%"}}>
                                                 {/* ::Picture Container */}
                                                 <div className="relative">
                                                     {/* :::picture */}
