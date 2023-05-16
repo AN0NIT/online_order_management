@@ -69,6 +69,8 @@ class ApiResponseMessageType(Enum):
     ALL_PRODUCTS_FROM_USER = 15
     PRODUCT_ADDED_SUCCESSFULLY = 20
     PRODUCT_DELETED_SUCCESSFULLY = 21
+    WALLET_BALANCE_INSUFFICIENT = 22
+
 
     def to_string(self):
         return f'{self.name}'
@@ -288,10 +290,13 @@ def delete_product(request):
 # Cart
 @api_view(['GET'])
 def get_cart(request, order_id):
-    cart_item = AddToCart.objects.get(id=order_id)
-    if (cart_item is None):
+    try:
+        cart_item = AddToCart.objects.get(id=order_id)
+        if (cart_item is None):
+            return Response('NO_CART_ITEM_FOUND')
+        return api_model_response(ApiResponseMessageType.PRODUCT_FOUND, cart_item)
+    except AddToCart.DoesNotExist:
         return Response('NO_CART_ITEM_FOUND')
-    return api_model_response(ApiResponseMessageType.PRODUCT_FOUND, cart_item)
 
 @api_view(['POST'])
 def add_cart_item(request):
@@ -383,27 +388,51 @@ def buy_cart_item(request):
     buyer = User.objects.get(id=buyer_id)
     if( buyer is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
+    
     cartProduct = AddToCart.objects.get(id=order_id)
     if (cartProduct is None):
         return Response('SOMETHING_WENT_WRONG')
+    product = Product.objects.get(id=cartProduct.product_id.id)
+    if(buyer.wallet_balance < (product.price * cartProduct.quantity)):
+        return api_data_response(Api.ApiResponseMessageType.WALLET_BALANCE_INSUFFICIENT)
+    else:
+        buyer.wallet_balance -= (product.price * cartProduct.quantity)
     cartProduct.ispurchased = True
     cartProduct.save()
+    buyer.save()
     return Response('ORDER_PLACED_SUCCESSFULLY')
 
-@api_view(['GET'])
-def sell_cart_item(request, order_id):
+@api_view(['POST'])
+def sell_cart_item(request):
+    # Make this POST to add seller_id
+    seller_id = request.data['seller_id']
+    order_id = request.data['order_id']
+    print(':sellerId:',seller_id)
+    print(':orderId:',order_id)
     try:
         cartProduct = AddToCart.objects.get(id=order_id)
+        seller = User.objects.get(id=seller_id)
+        if( seller is None):
+            return api_model_response(ApiResponseMessageType.USER_INVALID)
         if (cartProduct is None):
             return Response('SOMETHING_WENT_WRONG')
         cartProduct.issold = True
         product = Product.objects.get(id=cartProduct.product_id.id)
         print("old quan:",product.quantity)
+        print("old wallet:",seller.wallet_balance)
+        seller.wallet_balance += (cartProduct.quantity*product.price)
+        print("new wallet:",seller.wallet_balance)
         product.quantity -= cartProduct.quantity
         print("new quantity:",product.quantity)
         product.save()
+        seller.save()
         cartProduct.save()
         return Response('ORDER_EXECUTED_SUCCESSFULLY')
+    
+    # except User.DoesNotExist as error:
+        # print(error)
+        # return api_model_response(ApiResponseMessageType.USER_INVALID)
+
     except AddToCart.DoesNotExist:
         return Response('CART_NOT_FOUND')
     except Product.DoesNotExist:

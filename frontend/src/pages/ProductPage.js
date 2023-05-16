@@ -193,9 +193,6 @@ export default function ProductPage() {
                                 })
                                     :
                                     allProducts.map((item) => {
-                                        { console.log('category:', category) }   
-                                        { console.log('item:',item.category.toUpperCase())}
-                                        {console.log('trye:false|',category.includes(item.category.toUpperCase()))}
                                         if (category.includes(item.category.toUpperCase()))
                                             return (
                                                 <>

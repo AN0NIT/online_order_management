@@ -7,7 +7,7 @@ from .models import *
 class UserAdmin(admin.ModelAdmin):
     readonly_fields = ('id',)
     fields = ('id', 'username', 'fullname', 'dob',
-              'email', 'password', 'role', 'added_date','gstin')
+              'email', 'password', 'role', 'added_date','gstin','wallet_balance')
 
 
 admin.site.register(User, UserAdmin)

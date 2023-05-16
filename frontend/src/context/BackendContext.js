@@ -117,11 +117,11 @@ export const BackendProvider = ({ children }) => {
      const [orderDetails, setOrderDetails] = useState([])
 
     useEffect(() => {
-
         get_available_categories()
         get_all_products()
         console.log("calling useEffect from backendcontext")
         const id = localStorage.getItem(COOKIE_USER_ID)
+        // console.log("id:",JSON.parse(id))
         if (id) {
             const userInfo = localStorage.getItem(COOKIE_USER_INFO)
             if (userInfo) {
@@ -130,6 +130,8 @@ export const BackendProvider = ({ children }) => {
                 if (userArray.role == 1) {
                     setBuyer(true)
                     setSeller(false)
+                    get_cart_from_buyer(JSON.parse(id),false)
+                    get_cart_from_buyer(JSON.parse(id),true)
                 } else if (userArray.role == 2) {
                     setSeller(true)
                     setBuyer(false)
@@ -162,7 +164,7 @@ export const BackendProvider = ({ children }) => {
                 const userid = grab_user_id(res);
                 const message = res.data.message;
                 const userdata = grab_user_data(res);
-                // alert("userdata.rol:"+userdata.role)
+                console.log("userdata.rol:"+userdata)
                 switch (message) {
                     case "CORRECT_EMAIL_AND_PASSWORD":
                         switch (userdata.role) {
@@ -567,7 +569,7 @@ export const BackendProvider = ({ children }) => {
                     });
 
                     setTimeout(() => {
-                        // console.log('final smpar:', smpar)
+                        console.log('isPurchased:',isPurchased,'final smpar:', smpar)
                         if(!isPurchased)
                             setCartDetails(smpar)
                         else

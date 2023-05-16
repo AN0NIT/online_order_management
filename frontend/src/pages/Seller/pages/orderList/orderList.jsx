@@ -97,7 +97,7 @@ export default function SellerUserList() {
 
   useEffect(() => {
     loadData()
-  }, [])
+  }, [user])
 
   console.log('data:', data)
 

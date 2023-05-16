@@ -32,7 +32,7 @@ urlpatterns = [
     path('api/addtocart/edit/<uuid:order_id>', views.edit_cart_item, name='edit_cart'),
     path('api/addtocart/delete/<uuid:order_id>', views.delete_cart_item, name='delete_from_cart'),
     path('api/addtocart/buy/', views.buy_cart_item, name='buy_cart_item'),
-    path('api/addtocart/sell/<uuid:order_id>', views.sell_cart_item, name='sell_cart_item'),
+    path('api/addtocart/sell/', views.sell_cart_item, name='sell_cart_item'),
     path('api/addtocart/all/', views.get_cart_from_a_buyer,
          name='get_cart_from_a_buyer'),
     path('api/addtocart/orders/', views.get_cart_from_a_seller,

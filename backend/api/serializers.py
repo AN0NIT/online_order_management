@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         optional_fields = ['added_date']
         fields = ('id', 'username', 'fullname',
-                  'dob', 'email', 'password', 'role','gstin')
+                  'dob', 'email', 'password', 'role','gstin','wallet_balance')
 
 
 class ProductSerializer(serializers.ModelSerializer):
