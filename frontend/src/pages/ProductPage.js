@@ -1,5 +1,7 @@
 import { autocompleteClasses } from "@mui/material"
 import { useEffect, useContext, useState } from "react"
+import { Disclosure } from "@headlessui/react"
+import { ChevronRightIcon, LoginIcon, MinusIcon, PlusIcon, SearchIcon } from "@heroicons/react/solid"
 import axios from "axios"
 import phoneimg from "../assets/phone.jpg"
 // const SERVER_URL = 'http://127.0.0.1:8000'
@@ -9,11 +11,12 @@ import BackendContext from "context/BackendContext";
 
 
 export default function ProductPage() {
-    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO, add_to_cart } = useContext(BackendContext)
+    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO, add_to_cart, categories } = useContext(BackendContext)
     const [isBasePage, setBasePage] = useState(true)
     const [Products, setProducts] = useState([])
     const [Data, setData] = useState([])
-    const [category, setcategory] = useState('')
+    const [category, setcategory] = useState([])
+    const [catLength, setCatLength] = useState([])
     const loadData = async () => {
         let tmp = []
         await axios.get(`${API_SERVER_URL}/product/allproducts/`)
@@ -31,7 +34,7 @@ export default function ProductPage() {
                                 name: product.name,
                                 img: product.image,
                                 stock: product.quantity,
-                                category: product.category === 1 ? 'Electronics' : product.category === 2 ? 'Furniture' : 'Clothing',
+                                category: product.category === 1 ? 'Electronic' : product.category === 2 ? 'Furniture' : 'Clothing',
                                 status: product.status == 1 ? "active" : "inactive",
                                 price: product.price,
                             })
@@ -42,24 +45,101 @@ export default function ProductPage() {
             })
     }
 
+    const handleCheckBox = (e) => {
+        e.preventDefault();
+        // console.log('inside hanldeCheckbox:', e.target.value, e.target.checked);
+        // let tmp_val = category;
+        // if(e.target.checked && !tmp_val.includes(e.target.value))
+        //     tmp_val.push(e.target.value)
+        // else
+        //     tmp_val.splice(e.target.value, 0)
+        // console.log('after change:',tmp_val)
+        // setcategory(tmp_val)
+        let checkboxes= document.querySelectorAll('input[name="productCheckBox"]:checked');
+        console.log(checkboxes.value);
+        let temp_check= []
+        for (let i = 0; i < checkboxes.length; i++) {
+            const element = checkboxes[i];
+            temp_check.push(element.value)
+        }
+        console.log('temp_check:',temp_check);
+        setcategory(temp_check)
+    }
+
+
     const addProduct = async (item) => {
         await add_to_cart(item.pid, 1);
     }
     useEffect(() => {
         loadData()
-    }, [])
+        console.log('categories:', categories)
+        console.log('::', Data);
+        console.log(':::', catLength)
+        let temp_cat = categories;
+        temp_cat.forEach((element, index) => {
+            let len = 0;
+            for (let i = 0; i < Data.length; i++) {
+                const ele = Data[i];
+                if (ele.category.toUpperCase() === element[1])
+                    len += 1
+            }
+            // setCatLength(catLength[index].push(len))
+            element.push(len)
+            console.log('element:', element, len);
+        });
+        setCatLength(temp_cat)
 
+    }, [categories])
 
-
+    const data = [
+        { id: 1, href: "#link", value: "value1", label: "Category 1", quantity: "136", checked: false },
+        { id: 2, href: "#link", value: "value2", label: "Category 2", quantity: "89", checked: false },
+        { id: 3, href: "#link", value: "value3", label: "Category 3", quantity: "55", checked: false },
+        { id: 4, href: "#link", value: "value4", label: "Category 4", quantity: "214", checked: false },
+        { id: 5, href: "#link", value: "value5", label: "Category 5", quantity: "13", checked: false },
+        { id: 6, href: "#link", value: "value6", label: "Category 6", quantity: "177", checked: false },
+    ]
+    console.log('catLength:', catLength)
     return (
         <div>
             <div style={{ marginLeft: "5%", marginBottom: "2%", paddingLeft: "50px" }}>
-                <select value={category} onChange={(e) => { setcategory(e.target.value) }}>
-                    <option value=''>Select a category</option>
+                {/* <select value={category} onChange={(e) => { setcategory(e.target.value) }}>
+                    <option value=''>All</option>
                     <option value="Electronics">Electronics</option>
                     <option value="Furniture">Furniture</option>
                     <option value="Clothing">Clothing</option>
-                </select>
+                </select> */}
+
+                {/* ::Filter 2 */}
+                <div className="m-4 p-4 pt-0 w-full max-w-xs shadow rounded-md border border-gray-200 bg-white">
+                    <Disclosure as="div" className="border-b border-gray-200">
+                        {({ open }) => (
+                            <div className="py-5 pl-5 pr-3 flex flex-col">
+                                {/* :::Category name */}
+                                <Disclosure.Button className="group flex items-center justify-between">
+                                    <span className={`${open ? "text-indigo-400" : "text-gray-700"} text-lg font-bold font-oswald tracking-wider uppercase`}>Anything 2</span>
+                                    {open ?
+                                        <MinusIcon className="w-5 h-5 text-indigo-400 group-hover:text-gray-400" />
+                                        : <PlusIcon className={`w-5 h-5 text-gray-400 group-hover:text-indigo-400`} />
+                                    }
+                                </Disclosure.Button>
+                                {/* :::Filters */}
+                                <Disclosure.Panel className="mt-5 flex flex-col space-y-3">
+                                    {catLength.length > 0 && catLength.map(option => (
+                                        <div className="flex items-center">
+                                            <input onChange={handleCheckBox} name="productCheckBox" type="checkbox" id={option[1]} defaultValue={option[1]} defaultChecked={option[3]} className="form-checkbox h-5 w-5 border-gray-300 rounded text-indigo-400 focus:ring-indigo-400" />
+                                            <label htmlFor={option[1]} className={`ml-3 text-base ${option[3] ? "text-indigo-400" : "text-gray-700"} font-medium`} >{option[1]}</label>
+                                            <span className="ml-1 text-sm text-gray-400 font-light">{`(${option[2]})`}</span>
+                                        </div>
+                                    ))
+                                    }
+                                </Disclosure.Panel>
+                            </div>
+                        )}
+                    </Disclosure>
+                </div>
+
+                {/*--- */}
             </div>
             <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "25px", flexWrap: "wrap", padding: "50px" }}>
                 {/* {Data.map((item) => {
@@ -82,7 +162,7 @@ export default function ProductPage() {
                         <h2 className="text-2xl text-gray-700 font-bold">Deals of the Day</h2>
                         < div className="mt-6" >
                             <ul className="grid grid-cols-4 gap-10">
-                                {category === '' ? Data.map((item,) => {
+                                {category.length === 0 ? Data.map((item,) => {
                                     return (
                                         <li key={item.id} className="col-span-full sm:col-span-2 lg:col-span-1 group shadow rounded border border-gray-200 hover:shadow-md">
                                             <a href="" className="flex flex-col">
@@ -106,11 +186,7 @@ export default function ProductPage() {
                                                         {/* ::::price */}
                                                         <p className="text-lg text-gray-700 font-bold">{`₹${item.price}`}</p>
                                                         {/* ::::add to cart */}
-                                                        <button className="text-gray-400 hover:text-blue-500">
-                                                            <svg className="w-7 h-7 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                                <path d="M19.029 13h2.971l-.266 1h-2.992l.287-1zm.863-3h2.812l.296-1h-2.821l-.287 1zm-.576 2h4.387l.297-1h-4.396l-.288 1zm-11.816 6c-.828 0-1.5.672-1.5 1.5 0 .829.672 1.5 1.5 1.5s1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm6.5 1.5c0 .829-.672 1.5-1.5 1.5s-1.5-.671-1.5-1.5c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5zm8-16.5l-.743 2h-1.929l-3.474 12h-11.239l-4.615-11h14.812l-2.541 9h2.102l3.432-12h4.195z" />
-                                                            </svg>
-                                                        </button>
+                                                        <button className="py-1.5 px-3 shadow-sm rounded bg-blue-500 text-xs text-white font-semibold uppercase tracking-wide hover:bg-blue-600" onClick={() => addProduct(item)}>Order</button>
                                                     </div>
                                                 </div>
                                             </a>
@@ -120,7 +196,10 @@ export default function ProductPage() {
                                 })
                                     :
                                     Data.map((item) => {
-                                        if (category === item.category)
+                                        { console.log('category:', category) }   
+                                        { console.log('item:',item.category.toUpperCase())}
+                                        {console.log('trye:false|',category.includes(item.category.toUpperCase()))}
+                                        if (category.includes(item.category.toUpperCase()))
                                             return (
                                                 <>
                                                     <li key={item.id} className="col-span-full sm:col-span-2 lg:col-span-1 group shadow rounded border border-gray-200 hover:shadow-md">
@@ -145,11 +224,7 @@ export default function ProductPage() {
                                                                     {/* ::::price */}
                                                                     <p className="text-lg text-gray-700 font-bold">{`₹${item.price}`}</p>
                                                                     {/* ::::add to cart */}
-                                                                    <button className="text-gray-400 hover:text-blue-500">
-                                                                        <svg className="w-7 h-7 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-                                                                            <path d="M19.029 13h2.971l-.266 1h-2.992l.287-1zm.863-3h2.812l.296-1h-2.821l-.287 1zm-.576 2h4.387l.297-1h-4.396l-.288 1zm-11.816 6c-.828 0-1.5.672-1.5 1.5 0 .829.672 1.5 1.5 1.5s1.5-.671 1.5-1.5c0-.828-.672-1.5-1.5-1.5zm6.5 1.5c0 .829-.672 1.5-1.5 1.5s-1.5-.671-1.5-1.5c0-.828.672-1.5 1.5-1.5s1.5.672 1.5 1.5zm8-16.5l-.743 2h-1.929l-3.474 12h-11.239l-4.615-11h14.812l-2.541 9h2.102l3.432-12h4.195z" />
-                                                                        </svg>
-                                                                    </button>
+                                                                    <button className="py-1.5 px-3 shadow-sm rounded bg-blue-500 text-xs text-white font-semibold uppercase tracking-wide hover:bg-blue-600" onClick={() => addProduct(item)}>Order</button>
                                                                 </div>
                                                             </div>
                                                         </a>

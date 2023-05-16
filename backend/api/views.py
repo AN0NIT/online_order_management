@@ -466,6 +466,14 @@ def get_cart_from_a_seller(request):
 
 @api_view(['POST'])
 def get_available_categories(request):
+    # categories = Product.get_categories()
+    # print("categories:",categories)
+
+    # for i in categories:
+    #     print("iterating:",i[1])
+    #     product = Product.objects.get(category=i[0])
+    #     print("product name:",product["data"].name,"quantity:",product["data"].quantity)
+    
     return Response(
         Product.get_categories()
     )

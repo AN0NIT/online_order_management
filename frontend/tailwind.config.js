@@ -9,6 +9,10 @@ module.exports = {
         'suyati-yellow' : '#FDB92D',
         'suyati-gray' : '#7F8191'
       },
+      fontFamily: {
+        'playfair': ['Playfair', 'sans-serif'],
+        'oswald': ['Oswald', 'sans-serif'],
+      },
     },
   },
   plugins: [

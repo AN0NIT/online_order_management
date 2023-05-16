@@ -74,6 +74,7 @@ class Product(models.Model):
     def get_categories():
         return Product.PRODUCT_CATEGORY
 
+
     def get_seller(self):
         return self.userid.username
 
