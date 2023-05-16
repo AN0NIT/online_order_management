@@ -108,6 +108,8 @@ export const BackendProvider = ({ children }) => {
     // Products
     const [categories, setCategories] = useState([])
     const [product, setProduct] = useState([])
+    const [Products, setProducts] = useState([])
+    const [allProducts, setAllProducts] = useState([])
 
     // Carts
     const [buyerCart, setBuyerCart] = useState([])
@@ -117,6 +119,7 @@ export const BackendProvider = ({ children }) => {
     useEffect(() => {
 
         get_available_categories()
+        get_all_products()
         console.log("calling useEffect from backendcontext")
         const id = localStorage.getItem(COOKIE_USER_ID)
         if (id) {
@@ -350,6 +353,35 @@ export const BackendProvider = ({ children }) => {
 
     }
 
+    const get_all_products = async () => {
+        let tmp = []
+        await axios.get(`${API_SERVER_URL}/product/allproducts/`)
+            .then((res) => {
+                if (res.status == 200) {
+                    console.log('res.data:',res.data)
+                    setProducts(res.data)
+                    // convert product to data format accecpted by this template
+                    const stuff = res.data.data;
+                    for (let i = 0; i < stuff.length; i++) {
+                        const product = stuff[i]
+                        if (product.status == 1) {
+                            tmp.push({
+                                id: i,
+                                pid: product.id,
+                                name: product.name,
+                                img: product.image,
+                                stock: product.quantity,
+                                category: product.category === 1 ? 'Electronic' : product.category === 2 ? 'Furniture' : 'Clothing',
+                                status: product.status == 1 ? "active" : "inactive",
+                                price: product.price,
+                            })
+                        }
+                    }
+                    setAllProducts(tmp)
+                }
+            })
+    }
+
     const logout = async () => {
         alert("logout");
         setUser(DEFAULT_USER_INFO);
@@ -577,7 +609,7 @@ export const BackendProvider = ({ children }) => {
 
             //Product
             categories,
-            add_product, edit_product, get_product,
+            add_product, edit_product, get_product,allProducts,
 
 
             //Cart
