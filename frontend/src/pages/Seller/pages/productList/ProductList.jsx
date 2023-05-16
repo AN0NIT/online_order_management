@@ -16,8 +16,8 @@ export default function SellerProductList() {
   const userdata = JSON.parse(localStorage.getItem(COOKIE_USER_INFO))
   const [data, setData] = useState([]);
 
-  // console.log(user)
-  // console.log(userdata)
+  // console.log('user:',user)
+  // console.log('userdata:',userdata)
 
 
   const loadData = async () => {

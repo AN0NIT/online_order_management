@@ -9,11 +9,12 @@ import BackendContext from "context/BackendContext";
 import axios from "axios";
 import { useState } from "react";
 import { useParams } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
+import { useLocation,useNavigate } from 'react-router-dom';
 
 export default function Product(props) {
     const location = useLocation();
     const params = location.state;
+    const navigate = useNavigate()
     console.log('params:',params)
     const [updateData, setUpdateData] = useState({name:params.name, price:params.price, quantity:params.stock, status:params.status == "active" ? 1 : 0});
     const [imageContent, setImageContent] = useState(null);
@@ -45,6 +46,7 @@ export default function Product(props) {
         formData.append('status', updateData.status)
         formData.append('image', imageContent)
         await edit_product(formData, params.pid);
+        navigate("/seller/products")
       }
 
 

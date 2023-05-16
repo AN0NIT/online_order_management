@@ -404,6 +404,7 @@ export const BackendProvider = ({ children }) => {
             return
         }
         formData.append('userid', user.id)
+        console.log('formdata:',formData.get('image'))
         await axios.post(`${API_SERVER_URL}/product/edit/${pid}`,
             formData
         )

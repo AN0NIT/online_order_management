@@ -218,7 +218,6 @@ def add_product(request):
     user = User.objects.get(username=username)
     if (user is None):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-
     datas = Product.objects.create(
         userid=user,
         name=pname,
@@ -266,8 +265,10 @@ def edit_product(request, pid):
     product.quantity = quantity
     product.edited_date = date.today()
     product.status = status
-    if image is not 'null':
+    print("image:",image,type(image))
+    if image != 'null':
         product.image = image
+        print("image updated")
     product.save()
     return Response('PRODUCT_EDITED_SUCCESSFULLY')
 

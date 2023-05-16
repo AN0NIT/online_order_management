@@ -76,10 +76,11 @@ function Links() {
 
 export default function Footer() {
     return (
-        <div class='m-auto '>
-            <div class='bg-gray-200 p-4 text-center font-bold text-gray-400'>
-                {/* Copyright © 2023 */}
-            </div>
-        </div>
+        // <div class='m-auto '>
+        //     <div class='bg-gray-200 p-4 text-center font-bold text-gray-400'>
+        //         {/* Copyright © 2023 */}
+        //     </div>
+        // </div>
+        <></>
     );
 }
