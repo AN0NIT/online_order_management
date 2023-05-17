@@ -96,7 +96,7 @@ function HomePageHeader() {
                 <div className="mt-5 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-8 gap-x-4 sm:gap-x-8">
                     {categories.map(category => (
                         <div key={category.id} className="col-span-1 aspect-w-2 aspect-h-3 relative shadow-sm rounded-lg overflow-hidden bg-white hover:shadow-lg">
-                            <a href={category.href} className="py-6  justify-center flex items-end" style={{ height: 200 }}>
+                            <a href={category.href} className="py-6  justify-center flex items-end min-h-[250px]" >
                                 {/* ::Background Image */}
                                 <img src={category.picture} alt="" className="absolute inset-0 w-full h-full object-contain object-center"  />
                                 {/* ::Overlay */}
