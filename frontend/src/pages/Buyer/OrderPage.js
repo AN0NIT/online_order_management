@@ -10,11 +10,11 @@ function OrderPage() {
     const { user, get_cart_from_buyer, orderDetails, API_SERVER_URL, MEDIA_SERVER_URL } = useContext(BackendContext)
     console.log('user:', user)
     console.log('oderDeets:', orderDetails)
-    useEffect(() => {
-        if (user.id !== '') {
-            get_cart_from_buyer(user.id, true)
-        }
-    }, [user])
+    // useEffect(() => {
+    //     if (user.id !== '') {
+    //         get_cart_from_buyer(user.id, true)
+    //     }
+    // }, [user])
     let totalPrice = 0.0
     let progress = 45
     return (

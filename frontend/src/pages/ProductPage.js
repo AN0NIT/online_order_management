@@ -11,39 +11,36 @@ import BackendContext from "context/BackendContext";
 
 
 export default function ProductPage() {
-    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO, add_to_cart, categories } = useContext(BackendContext)
-    const [isBasePage, setBasePage] = useState(true)
-    const [Products, setProducts] = useState([])
-    const [Data, setData] = useState([])
+    const { API_SERVER_URL, MEDIA_SERVER_URL, COOKIE_USER_INFO, add_to_cart, categories, allProducts } = useContext(BackendContext)
     const [category, setcategory] = useState([])
     const [catLength, setCatLength] = useState([])
-    const loadData = async () => {
-        let tmp = []
-        await axios.get(`${API_SERVER_URL}/product/allproducts/`)
-            .then((res) => {
-                if (res.status == 200) {
-                    setProducts(res.data)
-                    // convert product to data format accecpted by this template
-                    const stuff = res.data.data;
-                    for (let i = 0; i < stuff.length; i++) {
-                        const product = stuff[i]
-                        if (product.status == 1) {
-                            tmp.push({
-                                id: i,
-                                pid: product.id,
-                                name: product.name,
-                                img: product.image,
-                                stock: product.quantity,
-                                category: product.category === 1 ? 'Electronic' : product.category === 2 ? 'Furniture' : 'Clothing',
-                                status: product.status == 1 ? "active" : "inactive",
-                                price: product.price,
-                            })
-                        }
-                    }
-                    setData(tmp)
-                }
-            })
-    }
+    // const loadData = async () => {
+    //     let tmp = []
+    //     await axios.get(`${API_SERVER_URL}/product/allproducts/`)
+    //         .then((res) => {
+    //             if (res.status == 200) {
+    //                 setProducts(res.data)
+    //                 // convert product to data format accecpted by this template
+    //                 const stuff = res.data.data;
+    //                 for (let i = 0; i < stuff.length; i++) {
+    //                     const product = stuff[i]
+    //                     if (product.status == 1) {
+    //                         tmp.push({
+    //                             id: i,
+    //                             pid: product.id,
+    //                             name: product.name,
+    //                             img: product.image,
+    //                             stock: product.quantity,
+    //                             category: product.category === 1 ? 'Electronic' : product.category === 2 ? 'Furniture' : 'Clothing',
+    //                             status: product.status == 1 ? "active" : "inactive",
+    //                             price: product.price,
+    //                         })
+    //                     }
+    //                 }
+    //                 setData(tmp)
+    //             }
+    //         })
+    // }
 
     const handleCheckBox = (e) => {
         e.preventDefault();
@@ -71,15 +68,15 @@ export default function ProductPage() {
         await add_to_cart(item.pid, 1);
     }
     useEffect(() => {
-        loadData()
+        // loadData()
         console.log('categories:', categories)
-        console.log('::', Data);
         console.log(':::', catLength)
+        console.log("allproducts:",allProducts)
         let temp_cat = categories;
         temp_cat.forEach((element, index) => {
             let len = 0;
-            for (let i = 0; i < Data.length; i++) {
-                const ele = Data[i];
+            for (let i = 0; i < allProducts.length; i++) {
+                const ele = allProducts[i];
                 if (ele.category.toUpperCase() === element[1])
                     len += 1
             }
@@ -89,7 +86,7 @@ export default function ProductPage() {
         });
         setCatLength(temp_cat)
 
-    }, [categories])
+    }, [categories,allProducts])
 
     const data = [
         { id: 1, href: "#link", value: "value1", label: "Category 1", quantity: "136", checked: false },
@@ -114,7 +111,11 @@ export default function ProductPage() {
                 <div className="m-4 p-4 pt-0 w-full max-w-xs shadow rounded-md border border-gray-200 bg-white">
                     <Disclosure as="div" className="border-b border-gray-200">
                         {({ open }) => (
+<<<<<<< HEAD
                             <div className="pt-3 pl-5 pr-3 flex flex-col">
+=======
+                            <div className="pt-3 pl-5 pb-2 pr-3 flex flex-col">
+>>>>>>> refs/remotes/origin/main
                                 {/* :::Category name */}
                                 <Disclosure.Button className="group flex items-center justify-between">
                                     <span className={`${open ? "text-indigo-400" : "text-gray-700"} text-lg font-bold font-oswald tracking-wider uppercase`}>Categories</span>
@@ -162,7 +163,7 @@ export default function ProductPage() {
                         <h2 className="text-2xl text-gray-700 font-bold">Deals of the Day</h2>
                         < div className="mt-6" >
                             <ul className="grid grid-cols-4 gap-10">
-                                {category.length === 0 ? Data.map((item,) => {
+                                {category.length === 0 ? allProducts.map((item,) => {
                                     return (
                                         <li key={item.id} className="col-span-full sm:col-span-2 lg:col-span-1 group shadow rounded border border-gray-200 hover:shadow-md">
                                             <a href="" className="flex flex-col justify-between" style={{height:"100%"}}>
@@ -195,10 +196,7 @@ export default function ProductPage() {
                                     )
                                 })
                                     :
-                                    Data.map((item) => {
-                                        { console.log('category:', category) }   
-                                        { console.log('item:',item.category.toUpperCase())}
-                                        {console.log('trye:false|',category.includes(item.category.toUpperCase()))}
+                                    allProducts.map((item) => {
                                         if (category.includes(item.category.toUpperCase()))
                                             return (
                                                 <>

@@ -108,6 +108,8 @@ export const BackendProvider = ({ children }) => {
     // Products
     const [categories, setCategories] = useState([])
     const [product, setProduct] = useState([])
+    const [Products, setProducts] = useState([])
+    const [allProducts, setAllProducts] = useState([])
 
     // Carts
     const [buyerCart, setBuyerCart] = useState([])
@@ -115,10 +117,11 @@ export const BackendProvider = ({ children }) => {
      const [orderDetails, setOrderDetails] = useState([])
 
     useEffect(() => {
-
         get_available_categories()
+        get_all_products()
         console.log("calling useEffect from backendcontext")
         const id = localStorage.getItem(COOKIE_USER_ID)
+        // console.log("id:",JSON.parse(id))
         if (id) {
             const userInfo = localStorage.getItem(COOKIE_USER_INFO)
             if (userInfo) {
@@ -127,6 +130,8 @@ export const BackendProvider = ({ children }) => {
                 if (userArray.role == 1) {
                     setBuyer(true)
                     setSeller(false)
+                    get_cart_from_buyer(JSON.parse(id),false)
+                    get_cart_from_buyer(JSON.parse(id),true)
                 } else if (userArray.role == 2) {
                     setSeller(true)
                     setBuyer(false)
@@ -159,7 +164,7 @@ export const BackendProvider = ({ children }) => {
                 const userid = grab_user_id(res);
                 const message = res.data.message;
                 const userdata = grab_user_data(res);
-                // alert("userdata.rol:"+userdata.role)
+                console.log("userdata.rol:"+userdata)
                 switch (message) {
                     case "CORRECT_EMAIL_AND_PASSWORD":
                         switch (userdata.role) {
@@ -350,6 +355,35 @@ export const BackendProvider = ({ children }) => {
 
     }
 
+    const get_all_products = async () => {
+        let tmp = []
+        await axios.get(`${API_SERVER_URL}/product/allproducts/`)
+            .then((res) => {
+                if (res.status == 200) {
+                    console.log('res.data:',res.data)
+                    setProducts(res.data)
+                    // convert product to data format accecpted by this template
+                    const stuff = res.data.data;
+                    for (let i = 0; i < stuff.length; i++) {
+                        const product = stuff[i]
+                        if (product.status == 1) {
+                            tmp.push({
+                                id: i,
+                                pid: product.id,
+                                name: product.name,
+                                img: product.image,
+                                stock: product.quantity,
+                                category: product.category === 1 ? 'Electronic' : product.category === 2 ? 'Furniture' : 'Clothing',
+                                status: product.status == 1 ? "active" : "inactive",
+                                price: product.price,
+                            })
+                        }
+                    }
+                    setAllProducts(tmp)
+                }
+            })
+    }
+
     const logout = async () => {
         alert("logout");
         setUser(DEFAULT_USER_INFO);
@@ -535,7 +569,7 @@ export const BackendProvider = ({ children }) => {
                     });
 
                     setTimeout(() => {
-                        // console.log('final smpar:', smpar)
+                        console.log('isPurchased:',isPurchased,'final smpar:', smpar)
                         if(!isPurchased)
                             setCartDetails(smpar)
                         else
@@ -577,7 +611,7 @@ export const BackendProvider = ({ children }) => {
 
             //Product
             categories,
-            add_product, edit_product, get_product,
+            add_product, edit_product, get_product,allProducts,
 
 
             //Cart

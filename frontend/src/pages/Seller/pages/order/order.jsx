@@ -15,7 +15,7 @@ export default function Product(props) {
   const location = useLocation();
   const params = location.state;
   // console.log('params:', params)
-  const { edit_product, MEDIA_SERVER_URL, API_SERVER_URL } = useContext(BackendContext)
+  const { user,edit_product, MEDIA_SERVER_URL, API_SERVER_URL } = useContext(BackendContext)
   const [buyerDetails, setBuyerDetails] = useState([])
   // const initialCondition = true
   const initialCondition = params.quantity > params.availablestock
@@ -32,7 +32,10 @@ export default function Product(props) {
     } else {
       // Handle the button click logic here
       console.log("Selling")
-      axios.get(`${API_SERVER_URL}/addtocart/sell/${params.id}`)
+      axios.post(`${API_SERVER_URL}/addtocart/sell/`,{
+        'seller_id': user.id,
+        'order_id':params.id
+      })
       .then((res) => {
         if (res.status = 200){
           console.log(res)

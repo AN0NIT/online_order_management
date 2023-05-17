@@ -36,8 +36,12 @@ class User(models.Model):
     role = models.IntegerField(choices=USER_TYPES, default=1)
     added_date = models.DateField(default=date.today)
     gstin = models.CharField(max_length=15)
+    wallet_balance =  models.PositiveIntegerField(default=500) 
     def get_user_type(self):
         return self.role
+
+    def get_wallet_balance(self):
+        return self.wallet_balance
 
     def __str__(self):
         return self.username

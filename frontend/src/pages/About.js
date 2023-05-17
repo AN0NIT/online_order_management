@@ -7,7 +7,7 @@ const AboutPage = () => {
   const { user, logout } = useContext(BackendContext)
 
   console.log(user)
-
+  // console.log('userDetails:',userDetails)
   return (
     <div class='mx-auto'>
       <div className="w-1/3 mx-auto my-4 overflow-hidden bg-white shadow sm:rounded-lg">
@@ -32,6 +32,10 @@ const AboutPage = () => {
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">DOB</dt>
               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">{user.dob}</dd>
+            </div>
+            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+              <dt className="text-sm font-medium text-gray-500">Wallet Balance:</dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">₹{user.wallet_balance}</dd>
             </div>
           </dl>
         </div>
