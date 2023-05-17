@@ -1,10 +1,27 @@
-import { React, useContext } from "react";
+import { React, useContext, useEffect, useState } from "react";
 import BackendContext from "context/BackendContext";
 import { gridColumnsTotalWidthSelector } from "@material-ui/data-grid";
-
+import axios from 'axios'
 const AboutPage = () => {
 
-  const { user, logout } = useContext(BackendContext)
+  const { user, logout, API_SERVER_URL } = useContext(BackendContext)
+  const [walletBalance, setWalletBalance] = useState('')
+  useEffect(() => {
+    const get_wallet_balance = () => {
+      axios.get(`${API_SERVER_URL}/user/get_wallet/${user.id}`)
+        .then((res) => {
+          if (res.status = 200) {
+            console.log(res.data)
+            setWalletBalance(res.data.wallet)
+          }
+          else
+            alert("handle delete error")
+        })
+    }
+    get_wallet_balance()
+  }, [user,walletBalance])
+
+
 
   console.log(user)
   // console.log('userDetails:',userDetails)
@@ -35,7 +52,7 @@ const AboutPage = () => {
             </div>
             <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
               <dt className="text-sm font-medium text-gray-500">Wallet Balance:</dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">₹{user.wallet_balance}</dd>
+              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2 sm:mt-0">₹{walletBalance}</dd>
             </div>
           </dl>
         </div>

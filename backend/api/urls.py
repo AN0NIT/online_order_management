@@ -16,6 +16,7 @@ urlpatterns = [
          views.get_all_products_from_a_user, name='get_all_products_from_a_user'),
 
      path('api/user/get_user/<uuid:id>', views.get_user, name='get_user'),
+     path('api/user/get_wallet/<uuid:userid>', views.get_wallet, name='get_wallet'),
 
     # Product apis
     path('api/product/<uuid:pid>', views.get_product, name='get_product'),

@@ -172,6 +172,22 @@ def get_user(request, id):
         print(error)
         return api_model_response(ApiResponseMessageType.USER_INVALID)
 
+@api_view(['GET'])
+def get_wallet(request, userid):
+    try:
+        user_data = User.objects.get(id=userid)
+        # print('userdata:',dir(user_data))
+        # print(user_data.dob)
+        # print(user_data.username)
+        # print(user_data.email)
+        data = {"wallet":f"{user_data.wallet_balance}" 
+                }
+        return Response(data)
+    except User.DoesNotExist as error:
+        print(error)
+        return api_model_response(ApiResponseMessageType.USER_INVALID)
+
+
 
 @api_view(['POST'])
 def delete_user(request):

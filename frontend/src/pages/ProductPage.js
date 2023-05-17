@@ -111,11 +111,7 @@ export default function ProductPage() {
                 <div className="m-4 p-4 pt-0 w-full max-w-xs shadow rounded-md border border-gray-200 bg-white">
                     <Disclosure as="div" className="border-b border-gray-200">
                         {({ open }) => (
-<<<<<<< HEAD
-                            <div className="pt-3 pl-5 pr-3 flex flex-col">
-=======
                             <div className="pt-3 pl-5 pb-2 pr-3 flex flex-col">
->>>>>>> refs/remotes/origin/main
                                 {/* :::Category name */}
                                 <Disclosure.Button className="group flex items-center justify-between">
                                     <span className={`${open ? "text-indigo-400" : "text-gray-700"} text-lg font-bold font-oswald tracking-wider uppercase`}>Categories</span>

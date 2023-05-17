@@ -10,7 +10,7 @@
     }
 
     .progress {
-    width: 45%!important;
+    width: 100%!important;
     height: 5px;
     background-color: #042baa;
 }
