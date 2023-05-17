@@ -106,7 +106,7 @@ export default function SellerUserList() {
     {
       field: "id",
       headerName: "Order",
-      width: 300
+      width: 200
     },
     {
       field: "product", headerName: "Product", width: 200 ,
@@ -119,6 +119,11 @@ export default function SellerUserList() {
         );
       },
 
+    },
+    {
+      field: "availablestock",
+      headerName: "Stock",
+      width: 120,
     },
     {
       field: "status",

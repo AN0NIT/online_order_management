@@ -61,7 +61,7 @@ const About = () => {
           <WidgetLg/>
           </div> */}
           
-          <Test 
+          <DropDown 
             setGeo={setGeo}
             setKeyword={setKeyword}
             setTime={setTime}
@@ -83,7 +83,7 @@ const About = () => {
 
 
 
-function Test({ setGeo, setTime, setKeyword }) {
+function DropDown({ setGeo, setTime, setKeyword }) {
   const filters = [
     {
       id: 'keyword',
@@ -158,7 +158,7 @@ function Test({ setGeo, setTime, setKeyword }) {
 export default function SellerDashboard() {
 
   const context = useContext(BackendContext)
-  const { isSeller } = context
+  const { isSeller,user } = context
   // alert("Dashboard:" + isSeller)
   // const navigate = useNavigate()
   // useEffect(() => {
@@ -167,6 +167,9 @@ export default function SellerDashboard() {
   //     navigate("/product")
   //   }
   // }, [])
+  useEffect(() => {
+  }, [user])
+  
 
   return (
     <>
