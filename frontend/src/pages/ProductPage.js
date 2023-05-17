@@ -114,19 +114,19 @@ export default function ProductPage() {
                 <div className="m-4 p-4 pt-0 w-full max-w-xs shadow rounded-md border border-gray-200 bg-white">
                     <Disclosure as="div" className="border-b border-gray-200">
                         {({ open }) => (
-                            <div className="py-5 pl-5 pr-3 flex flex-col">
+                            <div className="pt-3 pl-5 pr-3 flex flex-col">
                                 {/* :::Category name */}
                                 <Disclosure.Button className="group flex items-center justify-between">
-                                    <span className={`${open ? "text-indigo-400" : "text-gray-700"} text-lg font-bold font-oswald tracking-wider uppercase`}>Anything 2</span>
+                                    <span className={`${open ? "text-indigo-400" : "text-gray-700"} text-lg font-bold font-oswald tracking-wider uppercase`}>Categories</span>
                                     {open ?
                                         <MinusIcon className="w-5 h-5 text-indigo-400 group-hover:text-gray-400" />
                                         : <PlusIcon className={`w-5 h-5 text-gray-400 group-hover:text-indigo-400`} />
                                     }
                                 </Disclosure.Button>
                                 {/* :::Filters */}
-                                <Disclosure.Panel className="mt-5 flex flex-col space-y-3">
+                                <Disclosure.Panel className="mt-2 mb-3 flex flex-col items-start ">
                                     {catLength.length > 0 && catLength.map(option => (
-                                        <div className="flex items-center">
+                                        <div className="flex">
                                             <input onChange={handleCheckBox} name="productCheckBox" type="checkbox" id={option[1]} defaultValue={option[1]} defaultChecked={option[3]} className="form-checkbox h-5 w-5 border-gray-300 rounded text-indigo-400 focus:ring-indigo-400" />
                                             <label htmlFor={option[1]} className={`ml-3 text-base ${option[3] ? "text-indigo-400" : "text-gray-700"} font-medium`} >{option[1]}</label>
                                             <span className="ml-1 text-sm text-gray-400 font-light">{`(${option[2]})`}</span>
@@ -203,7 +203,7 @@ export default function ProductPage() {
                                             return (
                                                 <>
                                                     <li key={item.id} className="col-span-full sm:col-span-2 lg:col-span-1 group shadow rounded border border-gray-200 hover:shadow-md">
-                                                        <a href="" className="flex flex-col">
+                                                        <a href="" className="flex flex-col justify-between" style={{height:"100%"}}>
                                                             {/* ::Picture Container */}
                                                             <div className="relative">
                                                                 {/* :::picture */}
