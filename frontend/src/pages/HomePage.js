@@ -78,11 +78,11 @@ const TShirt = ({ num }) => {
 
 function HomePageHeader() {
     const categories = [
-        { id: 1, name: "IT & Tech", href: "#linkToCategory", picture: "https://fancytailwind.com/static/keyboard1-d324995c7d24b66f6935a11f1afcd6e7.jpg" },
-        { id: 2, name: "Accessories", href: "#linkToCategory", picture: "https://fancytailwind.com/static/watch5-a86e63e37a603823384a28ed21b5bd30.jpg" },
-        { id: 3, name: "Christmas", href: "#linkToCategory", picture: "https://fancytailwind.com/static/fun-pull1-c99e4d9aad2713d512f34897d43d7382.jpg" },
-        { id: 4, name: "Cameras", href: "#linkToCategory", picture: "https://fancytailwind.com/static/photo3-7a3f62bb0365e6bcfb3695a21e194700.jpg" },
-        { id: 5, name: "Shoes", href: "#linkToCategory", picture: "https://fancytailwind.com/static/shoes5-c9e834160d04845addcdf9d9e95d951c.webp" },
+        { id: 1, name: "IT & Tech", href: "/product", picture: "https://fancytailwind.com/static/keyboard1-d324995c7d24b66f6935a11f1afcd6e7.jpg" },
+        { id: 2, name: "Accessories", href: "/product", picture: "https://fancytailwind.com/static/watch5-a86e63e37a603823384a28ed21b5bd30.jpg" },
+        { id: 3, name: "Christmas", href: "/product", picture: "https://fancytailwind.com/static/fun-pull1-c99e4d9aad2713d512f34897d43d7382.jpg" },
+        { id: 4, name: "Cameras", href: "/product", picture: "https://fancytailwind.com/static/photo3-7a3f62bb0365e6bcfb3695a21e194700.jpg" },
+        { id: 5, name: "Shoes", href: "/product", picture: "https://fancytailwind.com/static/shoes5-c9e834160d04845addcdf9d9e95d951c.webp" },
     ]
 
     return (
