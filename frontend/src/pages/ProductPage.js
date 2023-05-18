@@ -140,7 +140,7 @@ export default function ProductPage() {
 
                 {/*--- */}
             </div>
-            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "25px", flexWrap: "wrap", padding: "50px" }}>
+            <div style={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "center", gap: "25px", flexWrap: "wrap", padding: "0px" }}>
                 {/* {Data.map((item) => {
                                 return (
                                     <div class="flex mb-3" style={{ listStyle: 'none', alignItems: "center", padding: "1%", backgroundColor: "lightgray", border: "1px solid gray", width: "90%" }}>
@@ -155,7 +155,7 @@ export default function ProductPage() {
                                 )
                 })} */}
                 {/* --- */}
-                <div className="mx-auto py-8 px-4 sm:px-6 w-full max-w-7xl bg-white">
+                <div className="mx-auto py-3 px-4 sm:px-6 w-full max-w-7xl bg-white">
                     <div className="mx-auto max-w-xs sm:max-w-2xl lg:max-w-none">
                         {/* :CATEGORY TITLE */}
                         <h2 className="text-2xl text-gray-700 font-bold">Deals of the Day</h2>
