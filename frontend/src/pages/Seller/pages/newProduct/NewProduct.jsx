@@ -198,6 +198,19 @@ export default function NewProduct() {
               <option value="0">Inactive</option>
             </select>
           </div>
+          {/* <div className="flex-shrink-0 mt-5 md:mt-0 max-w-sm sm:max-w-none w-full md:w-auto grid sm:grid-flow-col grid-cols-1 sm:auto-cols-fr gap-4 mr-[62%]">
+            <div key="active" className="col-span-1">
+              {/* <label>Active<label/> */}
+              {/* <label htmlFor="active" className="sr-only">Status</label> */}
+              {/* <select name='status' id="active" defaultValue="active" onChange={(e) => { */}
+              {/* // }} */}
+                {/* // className="form-select w-full rounded border text-base text-gray-600 focus:border-rose-500 focus:ring-rose-500"> */}
+                {/* <option value="" className="font-semibold">Active</option> */}
+                  {/* <option value="1">Active</option> */}
+                  {/* <option value="2">Inactive</option> */}
+              {/* </select> */}
+            {/* </div> */}
+          {/* </div>  */}
           <input value="Submit" type="submit" className="addProductButton" />
         </form>
       </div>

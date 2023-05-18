@@ -60,8 +60,8 @@ const About = () => {
           <WidgetSm/>
           <WidgetLg/>
           </div> */}
-          
-          <DropDown 
+
+          <DropDown
             setGeo={setGeo}
             setKeyword={setKeyword}
             setTime={setTime}
@@ -149,7 +149,7 @@ function DropDown({ setGeo, setTime, setKeyword }) {
             ))
             }
           </div>
-          </div>
+        </div>
       </div>
     </div>
   )
@@ -158,7 +158,7 @@ function DropDown({ setGeo, setTime, setKeyword }) {
 export default function SellerDashboard() {
 
   const context = useContext(BackendContext)
-  const { isSeller,user } = context
+  const { isSeller, user } = context
   // alert("Dashboard:" + isSeller)
   // const navigate = useNavigate()
   // useEffect(() => {
@@ -169,7 +169,7 @@ export default function SellerDashboard() {
   // }, [])
   useEffect(() => {
   }, [user])
-  
+
 
   return (
     <>
