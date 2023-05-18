@@ -81,7 +81,9 @@ export default function ProductPage() {
                     len += 1
             }
             // setCatLength(catLength[index].push(len))
-            element.push(len)
+            if(element.length === 3)
+                element.pop(3)
+            element.push({'available':len})
             console.log('element:', element, len);
         });
         setCatLength(temp_cat)
@@ -124,9 +126,9 @@ export default function ProductPage() {
                                 <Disclosure.Panel className="mt-2 mb-3 flex flex-col items-start ">
                                     {catLength.length > 0 && catLength.map(option => (
                                         <div className="flex">
-                                            <input onChange={handleCheckBox} name="productCheckBox" type="checkbox" id={option[1]} defaultValue={option[1]} defaultChecked={option[3]} className="form-checkbox h-5 w-5 border-gray-300 rounded text-indigo-400 focus:ring-indigo-400" />
-                                            <label htmlFor={option[1]} className={`ml-3 text-base ${option[3] ? "text-indigo-400" : "text-gray-700"} font-medium`} >{option[1]}</label>
-                                            <span className="ml-1 text-sm text-gray-400 font-light">{`(${option[2]})`}</span>
+                                            <input onChange={handleCheckBox} name="productCheckBox" type="checkbox" id={option[1]} defaultValue={option[1]} defaultChecked={option[2].available } className="form-checkbox h-5 w-5 border-gray-300 rounded text-indigo-400 focus:ring-indigo-400" />
+                                            <label htmlFor={option[1]} className={`ml-3 text-base ${option[2].available ? "text-indigo-400" : "text-gray-700"} font-medium`} >{option[1]}</label>
+                                            <span className="ml-1 text-sm text-gray-400 font-light">{`(${option[2].available})`}</span>
                                         </div>
                                     ))
                                     }
