@@ -61,7 +61,7 @@ function OrderPage() {
                                                             <p className="text-muted mb-0 small">Qty: {order.quantity}</p>
                                                         </div>
                                                         <div className="col-md-2 text-center d-flex justify-content-center align-items-center">
-                                                            <p className="text-muted mb-0 small">₹{order.quantity * order.price}</p>
+                                                            <p className="text-muted mb-0 small">${order.quantity * order.price}</p>
                                                         </div>
                                                     </div>
                                                     <hr
@@ -107,13 +107,13 @@ function OrderPage() {
                                     <div className="d-flex justify-content-between pt-2">
                                         <p className="fw-bold mb-0">Order Details</p>
                                         <p className="text-muted mb-0">
-                                            <span className="fw-bold me-4">Total</span> ₹{totalPrice}
+                                            <span className="fw-bold me-4">Total</span> ${totalPrice}
                                         </p>
                                     </div>
                                     <div className="d-flex justify-content-between pt-2">
                                         {/* <p className="text-muted mb-0">Invoice Number : 788152</p>
                                     <p className="text-muted mb-0">
-                                        <span className="fw-bold me-4">Discount</span> ₹19.00
+                                        <span className="fw-bold me-4">Discount</span> $19.00
                                     </p> */}
                                     </div>
                                     <div className="d-flex justify-content-between">
@@ -138,7 +138,7 @@ function OrderPage() {
                                     }}
                                 >
                                     <h5 className="d-flex align-items-center justify-content-end text-white text-uppercase mb-0">
-                                        Total paid: <span className="h2 mb-0 ms-2">₹{totalPrice}</span>
+                                        Total paid: <span className="h2 mb-0 ms-2">${totalPrice}</span>
                                     </h5>
                                 </div>
                             </div>

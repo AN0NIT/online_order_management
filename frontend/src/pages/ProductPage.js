@@ -53,7 +53,7 @@ export default function ProductPage() {
         // console.log('after change:',tmp_val)
         // setcategory(tmp_val)
         let checkboxes= document.querySelectorAll('input[name="productCheckBox"]:checked');
-        console.log(checkboxes.value);
+        console.log(checkboxes);
         let temp_check= []
         for (let i = 0; i < checkboxes.length; i++) {
             const element = checkboxes[i];
@@ -126,7 +126,7 @@ export default function ProductPage() {
                                 <Disclosure.Panel className="mt-2 mb-3 flex flex-col items-start ">
                                     {catLength.length > 0 && catLength.map(option => (
                                         <div className="flex">
-                                            <input onChange={handleCheckBox} name="productCheckBox" type="checkbox" id={option[1]} defaultValue={option[1]} defaultChecked={option[2].available } className="form-checkbox h-5 w-5 border-gray-300 rounded text-indigo-400 focus:ring-indigo-400" />
+                                            <input onChange={handleCheckBox} name="productCheckBox" type="checkbox" id={option[1]} defaultValue={option[1]}  className="form-checkbox h-5 w-5 border-gray-300 rounded text-indigo-400 focus:ring-indigo-400" />
                                             <label htmlFor={option[1]} className={`ml-3 text-base ${option[2].available ? "text-indigo-400" : "text-gray-700"} font-medium`} >{option[1]}</label>
                                             <span className="ml-1 text-sm text-gray-400 font-light">{`(${option[2].available})`}</span>
                                         </div>
@@ -183,7 +183,7 @@ export default function ProductPage() {
                                                     {/* :::container */}
                                                     <div className="flex justify-center items-center space-x-4">
                                                         {/* ::::price */}
-                                                        <p className="text-lg text-gray-700 font-bold">{`₹${item.price}`}</p>
+                                                        <p className="text-lg text-gray-700 font-bold">{`$${item.price}`}</p>
                                                         {/* ::::add to cart */}
                                                         <button className="py-1.5 px-3 shadow-sm rounded bg-blue-500 text-xs text-white font-semibold uppercase tracking-wide hover:bg-blue-600" onClick={() => addProduct(item)}>Order</button>
                                                     </div>
@@ -218,7 +218,7 @@ export default function ProductPage() {
                                                                 {/* :::container */}
                                                                 <div className="flex justify-center items-center space-x-4">
                                                                     {/* ::::price */}
-                                                                    <p className="text-lg text-gray-700 font-bold">{`₹${item.price}`}</p>
+                                                                    <p className="text-lg text-gray-700 font-bold">{`$${item.price}`}</p>
                                                                     {/* ::::add to cart */}
                                                                     <button className="py-1.5 px-3 shadow-sm rounded bg-blue-500 text-xs text-white font-semibold uppercase tracking-wide hover:bg-blue-600" onClick={() => addProduct(item)}>Order</button>
                                                                 </div>

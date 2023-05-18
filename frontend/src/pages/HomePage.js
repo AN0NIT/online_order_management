@@ -68,7 +68,7 @@ const TShirt = ({ num }) => {
                         </h3>
                         <p class="mt-1 text-sm text-gray-500">Black</p>
                     </div>
-                    <p class="text-sm font-medium text-gray-900">₹35</p>
+                    <p class="text-sm font-medium text-gray-900">$35</p>
                 </div>
             </div>
         </Link>

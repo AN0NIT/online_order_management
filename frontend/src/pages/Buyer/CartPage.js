@@ -79,8 +79,8 @@ function CartItem({ product, index }) {
           <path d="M416 208H272V64c0-17.67-14.33-32-32-32h-32c-17.67 0-32 14.33-32 32v144H32c-17.67 0-32 14.33-32 32v32c0 17.67 14.33 32 32 32h144v144c0 17.67 14.33 32 32 32h32c17.67 0 32-14.33 32-32V304h144c17.67 0 32-14.33 32-32v-32c0-17.67-14.33-32-32-32z" />
         </svg>
       </div>
-      <span class="text-center w-1/5 font-semibold text-sm">₹{product.price}</span>
-      <span class="text-center w-1/5 font-semibold text-sm">₹{product.quantity * product.price}</span>
+      <span class="text-center w-1/5 font-semibold text-sm">${product.price}</span>
+      <span class="text-center w-1/5 font-semibold text-sm">${product.quantity * product.price}</span>
     </div>
 
 
@@ -165,7 +165,7 @@ export default function Cart() {
             <div class="md:hidden border-t mt-8">
               <div class="flex font-semibold justify-between py-6 text-sm uppercase">
                 <span>Total cost</span>
-                <span>₹{totalPrice + 10.00}</span>
+                <span>${totalPrice + 10.00}</span>
               </div>
               <button class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
             </div>
@@ -181,12 +181,12 @@ export default function Cart() {
             <h1 class="font-semibold text-2xl border-b pb-8">Order Summary</h1>
             <div class="flex justify-between mt-10 mb-5">
               <span class="font-semibold text-sm uppercase">Items {cartDetails.length}</span>
-              <span class="font-semibold text-sm">₹{totalPrice}</span>
+              <span class="font-semibold text-sm">${totalPrice}</span>
             </div>
             <div>
               <label class="font-medium inline-block mb-3 text-sm uppercase">Shipping</label>
               <select class="block p-2 text-gray-600 w-full text-sm">
-                {/* <option>Standard shipping - ₹10.00</option> */}
+                {/* <option>Standard shipping - $10.00</option> */}
               </select>
             </div>
             {/* <div class="py-10"> */}
@@ -197,7 +197,7 @@ export default function Cart() {
             <div class="border-t mt-8">
               <div class="flex font-semibold justify-between py-6 text-sm uppercase">
                 <span>Total cost</span>
-                <span>₹{totalPrice}</span>
+                <span>${totalPrice}</span>
               </div>
               <button onClick={handleCheckout} class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
             </div>

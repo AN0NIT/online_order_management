@@ -56,7 +56,7 @@ function BasePage() {
         //                 {/* <!-- Options --> */}
         //                 <div class="mt-4 lg:mt-0 lg:row-span-3">
         //                     <h2 class="sr-only">Product information</h2>
-        //                     <p class="text-3xl text-gray-900">₹192</p>
+        //                     <p class="text-3xl text-gray-900">$192</p>
         //                     {/* <!-- Reviews --> */}
         //                     <div class="mt-6">
         //                         <h3 class="sr-only">Reviews</h3>
