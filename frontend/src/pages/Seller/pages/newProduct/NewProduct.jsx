@@ -144,13 +144,13 @@ export default function NewProduct() {
             }} /> */}
             <input type="file" name="image" onChange={handleImageChange} />
           </div>
-          <div className="addProductItem">
+          <div className="addProductItem" >
             <label>Name</label>
-            <input name='name' type="text" placeholder="Product name" />
+            <input name='name' type="text" className="styled-input" placeholder="Product name" />
           </div>
           <div className="addProductItem">
             <label>Category</label>
-            <select onChange={stockOnChange} name='category'>
+            <select onChange={stockOnChange} name='category' className="styled-input">
               {
                 categories.map((category, index) => (
                   <option value={`${index + 1}`}> {titleCase(category[1])}</option>
@@ -161,16 +161,16 @@ export default function NewProduct() {
           <div class='flex'>
             <div className="addProductItem">
               <label>Stock</label>
-              <input name='quantity' id='quantity' type="text" placeholder={`Stock: ${userSelectedStock}`} defaultValue={`${userSelectedStock}`} />
+              <input name='quantity' id='quantity' type="text" className="styled-input" placeholder={`Stock: ${userSelectedStock}`} defaultValue={`${userSelectedStock}`} />
               {/* <input name='quantity' id='quantity' type="text" placeholder={`Stock: ${sdStock?.min}-${sdStock?.max}`} /> */}
               {/* <h1 class='m-2 text-lg font-semibold text-gray-600 p-2 text-center'>{userSelectedStock}</h1> */}
             </div>
-            <div className="addProductItem bg-yellow-300 p-2 rounded-md">
+            <div className="addProductItem bg-yellow-300 p-2 rounded-md ml-[80px] mt-[20px]">
               <label class='text-center'>Recommended (seasonal demand)</label>
               {/* <div class='flex space-x-4'> */}
               {/* <input name='test' class='font-semibold' onChange={sliderOnChange} type="range" min={sdStock?.min} max={sdStock?.max} value={userSelectedStock} /> */}
               {/* </div> */}
-              <div class='text-center'>
+              <div class='text-center' >
                 <label >{sdStock?.min} - {sdStock?.max}</label>
               </div>
             </div>
@@ -180,9 +180,9 @@ export default function NewProduct() {
             <div className="addProductItem">
               <label>Price</label>
               {/* <h1 class='m-2 text-lg font-semibold text-gray-600 p-2 text-center'>{dpPrice}</h1> */}
-              <input name='price' id='price' type="text" placeholder={`Price: ${dpPrice}`} defaultValue={`${dpPrice}`} />
+              <input name='price' id='price' className="styled-input" type="text" placeholder={`Price: ${dpPrice}`} defaultValue={`${dpPrice}`} />
             </div>
-            <div className="addProductItem bg-yellow-300 p-2 rounded-md h-1/2 my-auto">
+            <div className="addProductItem bg-yellow-300 p-2 rounded-md h-1/2 my-auto ml-[80px] mt-[30px]">
               <label class='text-center'>Recommended (dynamic price)</label>
               <div class='text-center'>
                 <label >{dpPrice}</label>
@@ -193,7 +193,7 @@ export default function NewProduct() {
 
           <div className="addProductItem">
             <label>Active</label>
-            <select name='status' id="active">
+            <select name='status' id="active" className="styled-input">
               <option value="1">Active</option>
               <option value="0">Inactive</option>
             </select>

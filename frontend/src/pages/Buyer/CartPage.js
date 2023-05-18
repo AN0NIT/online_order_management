@@ -92,6 +92,7 @@ export default function Cart() {
 
   let totalPrice = 0.00;
   const { user, get_cart_from_buyer, cartDetails, API_SERVER_URL } = useContext(BackendContext)
+  const [walletBalance, setWalletBalance] = useState('')
 
   console.log('userid:', user.id)
   // useEffect(() => {
@@ -100,9 +101,28 @@ export default function Cart() {
   //   }
   // }, [user])
 
+
+  useEffect(() => {
+    const get_wallet_balance = () => {
+      axios.get(`${API_SERVER_URL}/user/get_wallet/${user.id}`)
+        .then((res) => {
+          if (res.status = 200) {
+            console.log(res.data)
+            setWalletBalance(res.data.wallet)
+          }
+          else
+            alert("handle delete error")
+        })
+    }
+    get_wallet_balance()
+  }, [user,walletBalance])
+
   const handleCheckout = async () => {
     if (cartDetails.length < 1)
       alert("NO_PRODUCTS_FOUND")
+    else if(walletBalance < totalPrice){
+      alert("INSUFFICIENT_FUND")
+    }
     else {
       cartDetails.forEach(async (element, index) => {
         console.log('order_id:', element.id, '\nindex:', index)

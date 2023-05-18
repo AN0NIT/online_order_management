@@ -44,7 +44,7 @@ function SearchBar() {
       <div class="py-2 relative text-gray-600">
         <input class="border-2 border-gray-300 bg-white h-10 w-full px-5 pr-16 rounded-lg text-sm focus:outline-none"
           type="search" name="search" placeholder="Search" />
-        <button type="submit" class="absolute right-0 top-0 mt-4 mr-3">
+        <button type="submit" class="absolute right-0 mt-2 mr-3">
           <SearchIcon class='h-6  w-6 ' aria-hidden="true" />
         </button>
       </div>
