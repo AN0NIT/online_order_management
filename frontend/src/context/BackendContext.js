@@ -8,6 +8,7 @@ import { gridColumnsTotalWidthSelector } from '@material-ui/data-grid';
 import PopUp from 'components/Popup';
 
 
+
 // protection routing
 import { useRoutes } from 'react-router-dom';
 
@@ -234,7 +235,7 @@ export const BackendProvider = ({ children }) => {
             // alert(gstin);
             // const apiKey = process.env.REACT_APP_API_KEY;
             // alert(apiKey);
-            // console.log(process.env.REACT_APP_API_KEY);
+            // console.log(':',process.env.REACT_APP_API_KEY);
             const response = await fetch("https://appyflow.in/api/verifyGST", {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -250,6 +251,7 @@ export const BackendProvider = ({ children }) => {
                 .then(data => {
                     console.log('data::' + data.message)
                     if (data.error) {
+                        console.log('error:',data.error)
                         alert('Error: Invalid GSTIN');
                         throw new Error('Invalid GSTIN');
                     }
