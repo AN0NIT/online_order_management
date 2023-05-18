@@ -1,7 +1,7 @@
 import { Fragment, useState, useContext, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { XIcon } from '@heroicons/react/outline'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import BackendContext from "../../context/BackendContext";
 import axios from 'axios'
 
@@ -89,7 +89,7 @@ function CartItem({ product, index }) {
 }
 
 export default function Cart() {
-
+  const navigate = useNavigate();
   let totalPrice = 0.00;
   const { user, get_cart_from_buyer, cartDetails, API_SERVER_URL } = useContext(BackendContext)
   const [walletBalance, setWalletBalance] = useState('')
@@ -134,6 +134,7 @@ export default function Cart() {
 
         console.log('checkout res:', tmp)
       })
+      navigate("/buyer/orders")
     }
   }
 

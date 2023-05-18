@@ -7,16 +7,54 @@ import BackendContext from "../../context/BackendContext";
 import axios from 'axios'
 
 function OrderPage() {
-    const { user, get_cart_from_buyer, orderDetails, API_SERVER_URL, MEDIA_SERVER_URL } = useContext(BackendContext)
+    const { user, get_cart_from_buyer, orderDetails,setOrderDetails, API_SERVER_URL, MEDIA_SERVER_URL } = useContext(BackendContext)
     console.log('user:', user)
     console.log('oderDeets:', orderDetails)
     useEffect(() => {
-        // OrderPage()
-    }, [user])
+        const get_cart = async () => {
+            let smpar = []
+            await axios.post(`${API_SERVER_URL}/addtocart/all/`, {
+                'buyer_id': user.id,
+                'isPurchased': true
+            })
+                .then(res => {
+                    if (res.status == 200) {
+                        console.log('resdata:', res.data)
+                        res.data.data.forEach(async (element, index) => {
+                            // console.log("pid:", element.product_id)
+                            let tmp = await axios.get(`${API_SERVER_URL}/product/${element.product_id}`)
+                            // console.log('tmp:',tmp)
+                            // console.log('p details:', tmp.data.data[0].fields.name)
+                            // console.log('p details:', res.data.data[index])
+                            tmp = tmp.data.data[0].fields
+                            smpar.push({
+                                ...res.data.data[index],
+                                name: tmp.name,
+                                price: tmp.price,
+                                image: '/media/' + tmp.image
+                            })
+                            // console.table('smpar:', smpar)
+                        });
+
+                        setOrderDetails(smpar)
+
+                    }
+                    else {
+                        console.log("nothing")
+                        return
+                    }
+                })
+                .catch((error) => {
+                    console.log('error:', error)
+                })
+
+        }
+        get_cart()
+    }, [user, orderDetails])
     let totalPrice = 0.0
     let progress = 45
     return (
-        orderDetails.length>0?
+        orderDetails.length > 0 ?
             <section className="h-100 gradient-custom">
                 <div className="container py-5 h-100">
                     <div className="row d-flex justify-content-center align-items-center h-100">
@@ -147,28 +185,28 @@ function OrderPage() {
                 </div>
             </section> :
             <div className="relative py-16 px-4 w-full min-h-screen bg-gray-50">
-            <div className="flex flex-col items-center">
-      
-              {/* :TITLE */}
-              <div className="text-center space-y-5">
-                <p className="text-6xl sm:text-7xl text-purple-500 font-bold tracking-wide">Oops</p>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl text-gray-700 font-semibold capitalize">This page does not exist</h1>
-                {/* <p className="text-sm text-gray-500 font-medium">Sorry! We could not find the page you are looking for. Please check URL in address bar and try again.</p> */}
-                <p className="text-sm text-gray-500 font-medium">Sorry! You Haven't bought anything from us yet.</p>
-              </div>
-      
-              {/* :OPTION LINKS */}
-              <div className="mt-8 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                <a href="/product" className="px-5 py-2.5 rounded border border-transparent bg-purple-600 text-center text-base text-white font-medium hover:bg-purple-700">Get back to Homepage</a>
-                {/* <a href="#link" className="px-5 py-2.5 rounded border-2 border-purple-400 bg-transparent text-center text-base text-purple-400 font-medium hover:border-purple-500 hover:text-purple-500">Contact Support</a> */}
-              </div>
-      
-      
-              {/* :ILLUSTRATION */}
-              <img src="https://fancytailwind.com/static/under_construction-503cab99df4458de6d2801e7ee4fa400.svg" alt="" className="mt-10 max-h-72" />
-      
+                <div className="flex flex-col items-center">
+
+                    {/* :TITLE */}
+                    <div className="text-center space-y-5">
+                        <p className="text-6xl sm:text-7xl text-purple-500 font-bold tracking-wide">Oops</p>
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl text-gray-700 font-semibold capitalize">This page does not exist</h1>
+                        {/* <p className="text-sm text-gray-500 font-medium">Sorry! We could not find the page you are looking for. Please check URL in address bar and try again.</p> */}
+                        <p className="text-sm text-gray-500 font-medium">Sorry! You Haven't bought anything from us yet.</p>
+                    </div>
+
+                    {/* :OPTION LINKS */}
+                    <div className="mt-8 flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                        <a href="/product" className="px-5 py-2.5 rounded border border-transparent bg-purple-600 text-center text-base text-white font-medium hover:bg-purple-700">Get back to Homepage</a>
+                        {/* <a href="#link" className="px-5 py-2.5 rounded border-2 border-purple-400 bg-transparent text-center text-base text-purple-400 font-medium hover:border-purple-500 hover:text-purple-500">Contact Support</a> */}
+                    </div>
+
+
+                    {/* :ILLUSTRATION */}
+                    <img src="https://fancytailwind.com/static/under_construction-503cab99df4458de6d2801e7ee4fa400.svg" alt="" className="mt-10 max-h-72" />
+
+                </div>
             </div>
-          </div>
     )
 }
 
