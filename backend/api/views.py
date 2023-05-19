@@ -191,116 +191,136 @@ def get_wallet(request, userid):
 
 @api_view(['POST'])
 def delete_user(request):
-    data = request.data
-    id = data['id']
-    user_data = User.objects.all()
-    for user in user_data:
-        if id == user.id:
-            user.delete()
-            return Response(f'{id} deleted successfully')
-    return Response('username not found')
+    try:
+        data = request.data
+        id = data['id']
+        user_data = User.objects.get(id=id)
+        user_data.delete()
+        return Response(f'{id} deleted successfully')
+    except User.DoesNotExist as error:
+        print(error)
+        return api_model_response(ApiResponseMessageType.USER_INVALID)
 
 
 @api_view(['GET'])
 def get_product(request, pid):
-    product_data = Product.objects.get(id=pid)
-    if (product_data is None):
+    try:
+        product_data = Product.objects.get(id=pid)
+        if (product_data is None):
+            return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+        return api_model_response(ApiResponseMessageType.PRODUCT_FOUND, product_data)
+    except Product.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
-    return api_model_response(ApiResponseMessageType.PRODUCT_FOUND, product_data)
+        
 
 
 @api_view(['POST'])
 def add_product(request):
-    data = request.data
-    print("Data:",data)
-    pname = data['name']
-    price = int(data['price'])
-    category = data['category']
-    quantity = int(data['quantity'])
-    status = data['status']
-    image = data['image']
-    username = data['username']
-    # print("image:",image)
-    if price <= 0:
-        return Response('PRODUCT_PRICE_IS_ZERO_OR_LESS')
-    if pname == "":
-        return Response('PRODUCT_NAME_IS_EMPTY')
-    if quantity <= 0:
-        return Response('PRODUCT_QUANTITY_IS_ZERO')
+    try:
+        data = request.data
+        print("Data:",data)
+        pname = data['name']
+        price = int(data['price'])
+        category = data['category']
+        quantity = int(data['quantity'])
+        status = data['status']
+        image = data['image']
+        username = data['username']
+        # print("image:",image)
+        if price <= 0:
+            return Response('PRODUCT_PRICE_IS_ZERO_OR_LESS')
+        if pname == "":
+            return Response('PRODUCT_NAME_IS_EMPTY')
+        if quantity <= 0:
+            return Response('PRODUCT_QUANTITY_IS_ZERO')
 
-    product_data = Product.objects.all()
-    for product in product_data:
-        if pname == product.name:
-            return Response('PRODUCT_ALREADY_EXIST')
+        product_data = Product.objects.all()
+        for product in product_data:
+            if pname == product.name:
+                return Response('PRODUCT_ALREADY_EXIST')
 
-    user = User.objects.get(username=username)
-    if (user is None):
+        user = User.objects.get(username=username)
+        if (user is None):
+            return api_model_response(ApiResponseMessageType.USER_INVALID)
+        datas = Product.objects.create(
+            userid=user,
+            name=pname,
+            category=category,
+            price=price,
+            quantity=quantity,
+            status=status,
+            image=image
+        )
+        return api_data_response(ApiResponseMessageType.PRODUCT_ADDED_SUCCESSFULLY)
+    except User.DoesNotExist:
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    datas = Product.objects.create(
-        userid=user,
-        name=pname,
-        category=category,
-        price=price,
-        quantity=quantity,
-        status=status,
-        image=image
-    )
-    return api_data_response(ApiResponseMessageType.PRODUCT_ADDED_SUCCESSFULLY)
+    except Product.DoesNotExist:
+        return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
 
 
 @api_view(['POST'])
 def edit_product(request, pid):
-    data = request.data
-    pname = data['name']
-    price = int(data['price'])
-    status = int(data['status'])
-    quantity = int(data['quantity'])
-    image  = data['image']
-    userid = data['userid']
-    # print("edit pro userid:",type(userid))
-    user = User.objects.get(id=userid)
-    # print(user)
-    if (user is None):
+    try:
+        data = request.data
+        pname = data['name']
+        price = int(data['price'])
+        status = int(data['status'])
+        quantity = int(data['quantity'])
+        image  = data['image']
+        userid = data['userid']
+        # print("edit pro userid:",type(userid))
+        user = User.objects.get(id=userid)
+        # print(user)
+        if (user is None):
+            return api_model_response(ApiResponseMessageType.USER_INVALID)
+        if price <= 0:
+            return Response('PRODUCT_PRICE_INVALID')
+        elif pname == "":
+            return Response('PRODUCT_NAME_EMPTY')
+        product = Product.objects.get(id=pid)
+        # print("product.userid.id:",product.userid.id,"!=",user.id)
+        if(product.userid.id != user.id ):
+            return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+        if (product is None):
+            return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+        # print('pname:',type(pname),pname)
+        # print('price:',type(price),price)
+        # print('quantity:',type(quantity),quantity)
+        # print('image:',type(image),image)
+        # print('status:',type(status),status)
+        # print('userid:',type(userid),userid)
+        product.name = pname
+        product.price = price
+        product.quantity = quantity
+        product.edited_date = date.today()
+        product.status = status
+        print("image:",image,type(image))
+        if image != 'null':
+            product.image = image
+            print("image updated")
+        product.save()
+        return Response('PRODUCT_EDITED_SUCCESSFULLY')
+    except User.DoesNotExist:
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    if price <= 0:
-        return Response('PRODUCT_PRICE_INVALID')
-    elif pname == "":
-        return Response('PRODUCT_NAME_EMPTY')
-    product = Product.objects.get(id=pid)
-    # print("product.userid.id:",product.userid.id,"!=",user.id)
-    if(product.userid.id != user.id ):
+    except Product.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
-    if (product is None):
-        return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
-    # print('pname:',type(pname),pname)
-    # print('price:',type(price),price)
-    # print('quantity:',type(quantity),quantity)
-    # print('image:',type(image),image)
-    # print('status:',type(status),status)
-    # print('userid:',type(userid),userid)
-    product.name = pname
-    product.price = price
-    product.quantity = quantity
-    product.edited_date = date.today()
-    product.status = status
-    print("image:",image,type(image))
-    if image != 'null':
-        product.image = image
-        print("image updated")
-    product.save()
-    return Response('PRODUCT_EDITED_SUCCESSFULLY')
 
 
 @api_view(['POST'])
 def delete_product(request):
-    username = request.data['username']
-    pname = request.data['productname']
-    user = User.objects.get(username=username)
-    product = Product.objects.get(userid=user, name=pname)
-    if (product is None):
+    try:
+        username = request.data['username']
+        pname = request.data['productname']
+        user = User.objects.get(username=username)
+        product = Product.objects.get(userid=user, name=pname)
+        if (product is None):
+            return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+        product.delete()
+        return api_data_response(ApiResponseMessageType.PRODUCT_DELETED_SUCCESSFULLY)
+    except User.DoesNotExist:
+        return api_model_response(ApiResponseMessageType.USER_INVALID)
+    except Product.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
-    product.delete()
-    return api_data_response(ApiResponseMessageType.PRODUCT_DELETED_SUCCESSFULLY)
 
 
 # Cart
@@ -374,26 +394,33 @@ def edit_cart_item(request, order_id):
 
     if quantity <= 0:
         return Response('CART_IS_EMPTY')
-    buyer = User.objects.get(id=buyer_id)
-    if( buyer is None):
+    try:
+        buyer = User.objects.get(id=buyer_id)
+        if( buyer is None):
+            return api_model_response(ApiResponseMessageType.USER_INVALID)
+        cartProduct = AddToCart.objects.get(id=order_id)
+        if (cartProduct is None):
+            return Response('SOMETHING_WENT_WRONG')
+        elif( quantity > cartProduct.product_id.quantity):
+            return Response('INVALID_QUANTITY')
+        cartProduct.quantity += quantity
+        cartProduct.save()
+        return Response('CART_EDITED_SUCCESSFULLY')
+    except User.DoesNotExist:
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    cartProduct = AddToCart.objects.get(id=order_id)
-    if (cartProduct is None):
-        return Response('SOMETHING_WENT_WRONG')
-    elif( quantity > cartProduct.product_id.quantity):
-        return Response('INVALID_QUANTITY')
-    cartProduct.quantity += quantity
-    cartProduct.save()
-    return Response('CART_EDITED_SUCCESSFULLY')
-
+    except AddToCart.DoesNotExist:
+        return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
 
 @api_view(['GET'])
 def delete_cart_item(request, order_id):
-    cartProduct = AddToCart.objects.get(id=order_id)
-    if (cartProduct is None):
-        return Response('SOMETHING_WENT_WRONG')
-    cartProduct.delete()
-    return Response('REMOVED_FROM_CART')
+    try:
+        cartProduct = AddToCart.objects.get(id=order_id)
+        if (cartProduct is None):
+            return Response('SOMETHING_WENT_WRONG')
+        cartProduct.delete()
+        return Response('REMOVED_FROM_CART')
+    except AddToCart.DoesNotExist:
+        return Response('SOMETHING_WENT_WRONG')        
 
 
 @api_view(['POST'])
@@ -401,22 +428,29 @@ def buy_cart_item(request):
     data = request.data
     buyer_id = request.data['buyer_id']
     order_id = request.data['order_id']
-    buyer = User.objects.get(id=buyer_id)
-    if( buyer is None):
+    try:
+        buyer = User.objects.get(id=buyer_id)
+        if( buyer is None):
+            return api_model_response(ApiResponseMessageType.USER_INVALID)
+        
+        cartProduct = AddToCart.objects.get(id=order_id)
+        if (cartProduct is None):
+            return Response('SOMETHING_WENT_WRONG')
+        product = Product.objects.get(id=cartProduct.product_id.id)
+        if(buyer.wallet_balance < (product.price * cartProduct.quantity)):
+            return api_data_response(Api.ApiResponseMessageType.WALLET_BALANCE_INSUFFICIENT)
+        else:
+            buyer.wallet_balance -= (product.price * cartProduct.quantity)
+        cartProduct.ispurchased = True
+        cartProduct.save()
+        buyer.save()
+        return Response('ORDER_PLACED_SUCCESSFULLY')
+    except User.DoesNotExist:
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-    
-    cartProduct = AddToCart.objects.get(id=order_id)
-    if (cartProduct is None):
-        return Response('SOMETHING_WENT_WRONG')
-    product = Product.objects.get(id=cartProduct.product_id.id)
-    if(buyer.wallet_balance < (product.price * cartProduct.quantity)):
-        return api_data_response(Api.ApiResponseMessageType.WALLET_BALANCE_INSUFFICIENT)
-    else:
-        buyer.wallet_balance -= (product.price * cartProduct.quantity)
-    cartProduct.ispurchased = True
-    cartProduct.save()
-    buyer.save()
-    return Response('ORDER_PLACED_SUCCESSFULLY')
+    except Product.DoesNotExist:
+        return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+    except AddToCart.DoesNotExist:
+        return Response('SOMETHING_WENT_WRONG')      
 
 @api_view(['POST'])
 def sell_cart_item(request):
@@ -456,8 +490,8 @@ def sell_cart_item(request):
 
 @api_view(['POST'])
 def get_cart_from_a_buyer(request):
-    # try:
-    if(1):
+    # if(1):
+    try:
         buyer_id = request.data['buyer_id']
         ispurchased = request.data['isPurchased']
         print('\n\n\n\nbuyer_id:',buyer_id,type(buyer_id))
@@ -473,12 +507,12 @@ def get_cart_from_a_buyer(request):
         print('\n\n\n\n',cartProducts,'\n\n\n\n')
         serializer = CartSerializer(cartProducts, many=True)
         return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
-    # except User.DoesNotExist as error:
-    #     print(error)
-    #     return api_model_response(ApiResponseMessageType.USER_INVALID)
+    except User.DoesNotExist as error:
+        print(error)
+        return api_model_response(ApiResponseMessageType.USER_INVALID)
 
-    # except AddToCart.DoesNotExist:
-    #     return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
+    except AddToCart.DoesNotExist:
+        return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
 
 
 @api_view(['POST'])
