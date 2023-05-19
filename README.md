@@ -1,5 +1,4 @@
-# suyati-online-order-mangement
-Suyati Team Project 
+# online-order-mangement
 
 # Steps to run frontend
 ```bash
