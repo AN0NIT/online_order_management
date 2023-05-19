@@ -101,11 +101,13 @@ export default function NewProduct() {
 
     // let form_data = new FormData()
     e.preventDefault();
-
+    let flag = 0;
     const formData = new FormData();
     const name = e.target.name.value;
     formData.append('name', name)
-    const price = dpPrice;
+    // const price = dpPrice;
+    const price = e.target.price.value;
+    console.log('price:',e.target.price.value)
     formData.append('price', price)
     const category = e.target.category.value;
     formData.append('category', category)
@@ -115,10 +117,18 @@ export default function NewProduct() {
     formData.append('status', status)
     formData.append('image', imageContent)
     console.log(formData.get('image'))
-    // const image = e.target.files[0];
-    //add_product(name, price, category, quantity, status, imageContent.selectedFile);
-    // await add_product(name, price, category, quantity, status, imageContent);
-    await add_product(formData);
+    formData.forEach((element,index)=>{
+      if(element=='null' || element=='' || element < 1){
+        // console.log('element[',index,']:',element)
+        // console.log(element=='null')
+        console.log('Error filling the fields')
+        // alert('INVALID_OR_INCOMPLETE_FIELDS')
+        flag = 1
+        return
+      }
+    })
+    if(flag==0)
+      await add_product(formData);
   }
 
   useEffect(() => {
