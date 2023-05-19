@@ -17,7 +17,7 @@ import { ViewGridIcon, ViewListIcon } from "@heroicons/react/solid"
 const About = () => {
   const type = "GEO_MAP";
   //const keyword = "electronics";
-  const [keyword, setKeyword] = useState('electronics')
+  const [keyword, setKeyword] = useState('Electronic')
   // const time = "now 1-d";
   const [time, setTime] = useState('now 1-d')
   // const geo = "IN";
@@ -84,15 +84,35 @@ const About = () => {
 
 
 function DropDown({ setGeo, setTime, setKeyword }) {
+  const { categories } = useContext(BackendContext)
+  // console.log("cat:", categories)
+  let tmp_cat = []
+
+  function convertFullCapsToStartingCap(string) {
+    const lowercaseString = string.toLowerCase();
+    const words = lowercaseString.split(' ');
+    const capitalizedWords = words.map(function (word) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    });
+    const convertedString = capitalizedWords.join(' ');
+    return convertedString;
+  }
+
+  categories.forEach((element, index) => {
+    // console.log(index, ':', convertFullCapsToStartingCap(element[1]))
+    tmp_cat.push({ value: convertFullCapsToStartingCap(element[1]), label: convertFullCapsToStartingCap(element[1]) })
+  })
+  // console.log('tmp_cat:', tmp_cat)
   const filters = [
     {
       id: 'keyword',
       name: 'Keyword',
-      options: [
-        { value: 'Electronics', label: 'Electronics' },
-        { value: 'Furniture', label: 'Furniture' },
-        { value: 'Clothing', label: 'Clothing' },
-      ],
+      // options: [
+      //   { value: 'Electronics', label: 'Electronics' },
+      //   { value: 'Furniture', label: 'Furniture' },
+      //   { value: 'Clothing', label: 'Clothing' },
+      // ],
+      options: tmp_cat,
     },
     {
       id: 'geo',
@@ -166,7 +186,7 @@ export default function SellerDashboard() {
   //     alert("Unauthorized access")
   //     navigate("/product")
   //   }
-  // }, [])
+  // }, [user])
   useEffect(() => {
   }, [user])
 
