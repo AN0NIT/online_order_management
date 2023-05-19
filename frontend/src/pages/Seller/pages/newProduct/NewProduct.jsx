@@ -98,8 +98,6 @@ export default function NewProduct() {
   }
 
   const createProduct = async (e) => {
-
-    // let form_data = new FormData()
     e.preventDefault();
     let flag = 0;
     const formData = new FormData();
@@ -107,7 +105,7 @@ export default function NewProduct() {
     formData.append('name', name)
     // const price = dpPrice;
     const price = e.target.price.value;
-    console.log('price:',e.target.price.value)
+    // console.log('price:',e.target.price.value)
     formData.append('price', price)
     const category = e.target.category.value;
     formData.append('category', category)
@@ -116,7 +114,7 @@ export default function NewProduct() {
     const status = e.target.status.value;
     formData.append('status', status)
     formData.append('image', imageContent)
-    console.log(formData.get('image'))
+    // console.log(formData.get('image'))
     formData.forEach((element,index)=>{
       if(element=='null' || element=='' || element < 1){
         // console.log('element[',index,']:',element)
@@ -127,8 +125,12 @@ export default function NewProduct() {
         return
       }
     })
-    if(flag==0)
+    if(flag==0){
+      // console.log('sending:')
       await add_product(formData);
+    }
+    else
+      alert('INVALID_OR_INCOMPLETE_FIELDS')
   }
 
   useEffect(() => {
