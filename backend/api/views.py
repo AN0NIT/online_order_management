@@ -18,6 +18,8 @@ import bcrypt
 from datetime import date
 from django.db import models
 from django.core import serializers
+from django.core.exceptions import ValidationError
+
 
 from .forms import ImageForm
 
@@ -96,21 +98,28 @@ def api_data_response(messagetype: ApiResponseMessageType, serialized_data=None)
 
 @api_view(['POST'])
 def login(request):
-    data = request.data
-    email = data['email']
-    password = data['password']
-    if email == "":
-        return api_model_response(ApiResponseMessageType.INPUT_FIELD_EMAIL_EMPTY)
-    elif password == "":
-        return api_model_response(ApiResponseMessageType.INPUT_FIELD_PASSWORD_EMPTY)
+    try:
+        data = request.data
+        email = data['email']
+        password = data['password']
+        if email == "":
+            return api_model_response(ApiResponseMessageType.INPUT_FIELD_EMAIL_EMPTY)
+        elif password == "":
+            return api_model_response(ApiResponseMessageType.INPUT_FIELD_PASSWORD_EMPTY)
 
-    for user in User.objects.all():
-        if email == user.email:
-            if password == user.password:
-                return api_model_response(ApiResponseMessageType.CORRECT_EMAIL_AND_PASSWORD, user)
-            else:
-                return api_model_response(ApiResponseMessageType.WRONG_PASSWORD)
-    return api_model_response(ApiResponseMessageType.WRONG_EMAIL_AND_PASSWORD)
+        for user in User.objects.all():
+            if email == user.email:
+                if password == user.password:
+                    return api_model_response(ApiResponseMessageType.CORRECT_EMAIL_AND_PASSWORD, user)
+                else:
+                    return api_model_response(ApiResponseMessageType.WRONG_PASSWORD)
+        return api_model_response(ApiResponseMessageType.WRONG_EMAIL_AND_PASSWORD)
+    except User.DoesNotExist as error:
+        print(error)
+        return api_model_response(ApiResponseMessageType.USER_INVALID)
+
+    except KeyError:
+        return Response("INVALID_HEADER(S)")    
 
 
 def get_role_id(type_name):
@@ -126,33 +135,36 @@ def get_role_id(type_name):
 
 @api_view(['POST'])
 def signup(request):
-    data = request.data
-    print(data)
-    fullname = data['fullname']
-    username = data['username']
-    dob = data['dob']
-    email = data['email']
-    password = data['password']
-    role = get_role_id(data['role'])
-    gstin = 'NIL'
-    if role != 1:
-        gstin = data['gstin']  
-    user_data = User.objects.all()
-    for user in user_data:
-        if username == user.username:
-            return api_model_response(ApiResponseMessageType.USERNAME_ALREADY_TAKEN)
-        if email == user.email:
-            return api_model_response(ApiResponseMessageType.EMAIL_ALREADY_TAKEN)
-    user = User.objects.create(
-        fullname=fullname,
-        username=username,
-        dob=dob,
-        email=email,
-        password=password,
-        role=role,
-        gstin=gstin,
-    )
-    return api_model_response(ApiResponseMessageType.SIGNUP_SUCCESSFULL, user)
+    try:
+        data = request.data
+        print(data)
+        fullname = data['fullname']
+        username = data['username']
+        dob = data['dob']
+        email = data['email']
+        password = data['password']
+        role = get_role_id(data['role'])
+        gstin = 'NIL'
+        if role != 1:
+            gstin = data['gstin']  
+        user_data = User.objects.all()
+        for user in user_data:
+            if username == user.username:
+                return api_model_response(ApiResponseMessageType.USERNAME_ALREADY_TAKEN)
+            if email == user.email:
+                return api_model_response(ApiResponseMessageType.EMAIL_ALREADY_TAKEN)
+        user = User.objects.create(
+            fullname=fullname,
+            username=username,
+            dob=dob,
+            email=email,
+            password=password,
+            role=role,
+            gstin=gstin,
+        )
+        return api_model_response(ApiResponseMessageType.SIGNUP_SUCCESSFULL, user)
+    except KeyError:
+        return Response("INVALID_HEADER(S)")    
 
 
 @api_view(['GET'])
@@ -200,6 +212,8 @@ def delete_user(request):
     except User.DoesNotExist as error:
         print(error)
         return api_model_response(ApiResponseMessageType.USER_INVALID)
+    except KeyError:
+        return Response("INVALID_HEADER(S)")    
 
 
 @api_view(['GET'])
@@ -256,6 +270,8 @@ def add_product(request):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
     except Product.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+    except KeyError:
+        return Response("INVALID_HEADER(S)")    
 
 
 @api_view(['POST'])
@@ -304,6 +320,8 @@ def edit_product(request, pid):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
     except Product.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+    except KeyError:
+        return Response("INVALID_HEADER(S)")    
 
 
 @api_view(['POST'])
@@ -321,6 +339,8 @@ def delete_product(request):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
     except Product.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+    except KeyError:
+        return Response("INVALID_HEADER(S)")    
 
 
 # Cart
@@ -336,15 +356,15 @@ def get_cart(request, order_id):
 
 @api_view(['POST'])
 def add_cart_item(request):
-    buyer_id = request.data['buyer_id']
-    quantity = int(request.data['quantity'])
-    product_id = request.data['product_id']
-    print("byuyer_id:",buyer_id)
-    print("quantity:",quantity)
-    print("product_Id:",product_id)
-    if (quantity <= 0):
-        return Response('INVALID_QUANTITY')
     try:
+        buyer_id = request.data['buyer_id']
+        quantity = int(request.data['quantity'])
+        product_id = request.data['product_id']
+        print("byuyer_id:",buyer_id)
+        print("quantity:",quantity)
+        print("product_Id:",product_id)
+        if (quantity <= 0):
+            return Response('INVALID_QUANTITY')
         # if(1):
         print("buy-->")
         buyer = User.objects.get(id=buyer_id)
@@ -381,6 +401,9 @@ def add_cart_item(request):
             #product.quantity = product.quantity - quantity
         print('ADDED_TO_CART')
         return Response('ADDED_TO_CART')
+    
+    except KeyError:
+        return Response("INVALID_HEADER(S)")    
 
     except Exception as error:
         print("new error:",error)
@@ -388,13 +411,14 @@ def add_cart_item(request):
 
 @api_view(['POST'])
 def edit_cart_item(request, order_id):
-    data = request.data
-    quantity = int(data['quantity'])
-    buyer_id = request.data['buyer_id']
-
-    if quantity <= 0:
-        return Response('CART_IS_EMPTY')
     try:
+        data = request.data
+        quantity = int(data['quantity'])
+        buyer_id = request.data['buyer_id']
+
+        if quantity <= 0:
+            return Response('CART_IS_EMPTY')
+    
         buyer = User.objects.get(id=buyer_id)
         if( buyer is None):
             return api_model_response(ApiResponseMessageType.USER_INVALID)
@@ -410,6 +434,8 @@ def edit_cart_item(request, order_id):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
     except AddToCart.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
+    except KeyError:
+        return Response("INVALID_HEADER(S)")
 
 @api_view(['GET'])
 def delete_cart_item(request, order_id):
@@ -425,10 +451,10 @@ def delete_cart_item(request, order_id):
 
 @api_view(['POST'])
 def buy_cart_item(request):
-    data = request.data
-    buyer_id = request.data['buyer_id']
-    order_id = request.data['order_id']
     try:
+        data = request.data
+        buyer_id = request.data['buyer_id']
+        order_id = request.data['order_id']
         buyer = User.objects.get(id=buyer_id)
         if( buyer is None):
             return api_model_response(ApiResponseMessageType.USER_INVALID)
@@ -450,16 +476,18 @@ def buy_cart_item(request):
     except Product.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
     except AddToCart.DoesNotExist:
-        return Response('SOMETHING_WENT_WRONG')      
+        return Response('SOMETHING_WENT_WRONG')
+    except KeyError:
+        return Response("INVALID_HEADER(S)")      
 
 @api_view(['POST'])
 def sell_cart_item(request):
     # Make this POST to add seller_id
-    seller_id = request.data['seller_id']
-    order_id = request.data['order_id']
-    print(':sellerId:',seller_id)
-    print(':orderId:',order_id)
     try:
+        seller_id = request.data['seller_id']
+        order_id = request.data['order_id']
+        print(':sellerId:',seller_id)
+        print(':orderId:',order_id)
         cartProduct = AddToCart.objects.get(id=order_id)
         seller = User.objects.get(id=seller_id)
         if( seller is None):
@@ -479,23 +507,27 @@ def sell_cart_item(request):
         cartProduct.save()
         return Response('ORDER_EXECUTED_SUCCESSFULLY')
     
-    # except User.DoesNotExist as error:
-        # print(error)
-        # return api_model_response(ApiResponseMessageType.USER_INVALID)
+    except User.DoesNotExist as error:
+        print(error)
+        return api_model_response(ApiResponseMessageType.USER_INVALID)
 
     except AddToCart.DoesNotExist:
         return Response('CART_NOT_FOUND')
     except Product.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCT_FOUND)
 
+    except KeyError:
+        return Response("INVALID_HEADER(S)")
+
+# checked
 @api_view(['POST'])
 def get_cart_from_a_buyer(request):
     # if(1):
     try:
         buyer_id = request.data['buyer_id']
         ispurchased = request.data['isPurchased']
-        print('\n\n\n\nbuyer_id:',buyer_id,type(buyer_id))
-        print('\n\n\n\n',ispurchased,type(ispurchased))
+        # print('\n\n\n\nbuyer_id:',buyer_id,type(buyer_id))
+        # print('\n\n\n\n',ispurchased,type(ispurchased))
         buyer = User.objects.get(id=buyer_id)
         if (buyer is None):
             return api_model_response(ApiResponseMessageType.USER_INVALID)
@@ -504,22 +536,25 @@ def get_cart_from_a_buyer(request):
         # cartProducts = AddToCart.objects.select_related('product_id').filter(buyer_id=buyer_id, ispurchased=ispurchased).values('id', 'buyer_id', 'quantity', 'product_id', 'ispurchased',  'product_id__name', 'product_id__price', 'product_id__image')
         if not cartProducts:
             return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
-        print('\n\n\n\n',cartProducts,'\n\n\n\n')
+        # print('\n\n\n\n',cartProducts,'\n\n\n\n')
         serializer = CartSerializer(cartProducts, many=True)
         return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
     except User.DoesNotExist as error:
         print(error)
         return api_model_response(ApiResponseMessageType.USER_INVALID)
-
     except AddToCart.DoesNotExist:
         return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
+    except ValidationError:
+        return Response("INCORRECT_VALUES")
+    except KeyError:
+        return Response("INVALID_HEADER(S)")
 
-
+# checked
 @api_view(['POST'])
 def get_cart_from_a_seller(request):
-    seller_id = request.data['seller_id']
-    print('\n\n\n\nseller_id:',seller_id,type(seller_id))
     try:
+        seller_id = request.data['seller_id']
+        # print('\n\n\n\nseller_id:',seller_id,type(seller_id))
         seller = User.objects.get(id=seller_id)
         if (seller is None):
             return api_model_response(ApiResponseMessageType.USER_INVALID)
@@ -536,13 +571,17 @@ def get_cart_from_a_seller(request):
         return api_model_response(ApiResponseMessageType.USER_INVALID)
 
     except AddToCart.DoesNotExist:
+        print(error)
         return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
-        
+
+    except KeyError:
+        return Response("INVALID_HEADER(S)")
+
     except Exception as error:
         print("new error:",error)
         return Response(f'{error}')
 
-
+# checked
 @api_view(['POST'])
 def get_available_categories(request):
     # categories = Product.get_categories()
@@ -557,23 +596,38 @@ def get_available_categories(request):
         Product.get_categories()
     )
 
-
+# checked
 @api_view(['POST'])
 def get_all_products_from_a_user(request):
-    seller_id = request.data['seller_id']
-    user = User.objects.get(id=seller_id)
-    if (user is None):
+    try:
+        seller_id = request.data['seller_id']
+        user = User.objects.get(id=seller_id)
+        if (user is None):
+            return api_model_response(ApiResponseMessageType.USER_INVALID)
+        products = Product.objects.all().filter(userid=user)
+        if (products is None or len(products) == 0):
+            return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
+        serializer = ProductSerializer(products, many=True)
+        return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
+    except User.DoesNotExist:
         return api_model_response(ApiResponseMessageType.USER_INVALID)
+    except Product.DoesNotExist:
+        return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
+    except KeyError:
+        return Response("INVALID_HEADER(S)")
+    
 
-    products = Product.objects.all().filter(userid=user)
-    serializer = ProductSerializer(products, many=True)
-    return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
-
+# checked
 @api_view(['GET'])
 def get_all_products(request):
-    products = Product.objects.all()
-    serializer = ProductSerializer(products, many=True)
-    return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
+    try:
+        products = Product.objects.all()
+        if (products is None or len(products) == 0):
+            return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
+        serializer = ProductSerializer(products, many=True)
+        return api_data_response(ApiResponseMessageType.ALL_PRODUCTS_FROM_USER, serializer.data)
+    except Product.DoesNotExist:
+        return api_model_response(ApiResponseMessageType.NO_PRODUCTS_FROM_USER)
 
 
 @api_view(['POST'])
